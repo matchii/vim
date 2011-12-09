@@ -1,8 +1,11 @@
 :%s/^\(class\s*.*\)\s*{\s*\n/\1\r{\r/e " klamra za class
 :%s/^\(\s*\)\(.*function\s*.*\s*(.*)\)\s*{\s*\n/\1\2\r\1{\r/e " klamra za function
 :%s/\s*$//e " białe znaki na końcu linii
-:%s/\(\s*if\s*(.*\)\n\s*{/\1 {/e " klamra za if
+:%s/^\(\s*if\s*(.*)\)\s*\(\/\/.*\)\n\s*{/\1 { \2/e " klamra za if z komentarzem
+:%s/^\(\s*if\s*(.*\)\n\s*{/\1 {/e " klamra za if
+:%s/\(\s*\)else\s*if\(\s*(.*)\)\s*\(\/\/.*\)\n\s*{/\1elseif\2 { \3/e " klamra za else if z komentarzem
 :%s/\(\s*\)else\s*if\(\s*(.*\)\n\s*{/\1elseif\2 {/e " klamra za else if
+:%s/\(\s*}\)\n\s*else\s*\(\/\/.*\)\n\s*{/\1 else { \2/e " klamry naokoło else z komentarzem
 :%s/\(\s*}\)\n\s*else\n\s*{/\1 else {/e " klamry naokoło else
 :%s/\(\s*while\s*(.*\)\n\s*{/\1 {/e " klamra za while
 :%s/\(\s*switch\s*(.*\)\n\s*{/\1 {/e " klamra za switch
