@@ -85,3 +85,11 @@ endfunction
 "	execute "%s/^\(\s*\)\t\(.*\)/\1    \2/g"
 "	execute "nohlsearch"
 "endfunction
+
+function! UnderscoreToDash(content)
+	return substitute(a:content, "_", "-", "g")
+endfunction
+
+function! GetPHPDocumentation(name)
+	execute "!firefox www.php.net/manual/en/function." . UnderscoreToDash(a:name)
+endfunction
