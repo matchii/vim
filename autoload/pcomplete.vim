@@ -3,19 +3,17 @@ function! pcomplete#CompletePHP(findstart, base)
 	if a:findstart == 1 " pierwsze wywołanie, szukamy początku ciągu, który będziemy uzupełniać
 
 		if pcomplete#isBetweenTags() == 1 " jesteśmy wewnątrz tagów php
+			"b:lineContext - wszystko przed kursorem
 			let b:lineContext = getline('.')[0:col(".")]
-			if match(b:lineContext, '::\|->$') != -1
+			if match(b:lineContext, '\(::\|->\)$') != -1
 				let b:startOfCompl = col(".")
-				" let b:iii = 'if'
+				"let b:iii = 'if'
 			else
 				let tmp = searchpos('\<', 'bn', line(".")) " położenie początku wyrazu
 				let b:startOfCompl = tmp[1] - 1
-				" let b:iii = 'else'
+				"let b:iii = 'else'
 			endif
-				"b:lineContext - wszystko przed kursorem, potrzebne do
-				"ustalania, co próbujemy uzupełnić
 			return b:startOfCompl
-			"return col(".")
 		else " nie jesteśmy wewnątrz tagów php
 			return -1
 		endif
@@ -24,12 +22,18 @@ function! pcomplete#CompletePHP(findstart, base)
 
 		" pliki tagów
 		let g:fnames = join(map(tagfiles(), 'escape(v:val, " \\#%")'))
+		if g:fnames == ''
+			return []
+		endif
 		let b:base = a:base
 
 		if b:lineContext =~ '::[a-zA-Z_0-9]*$'
 			if b:lineContext =~ 'self::[a-zA-Z_0-9]*$' " szukamy w tej klasie i jej rodzicach
 				let b:thisClassName = pcomplete#GetClassNameFromFileContext()
 				" let b:i_className = 'if'
+			elseif b:lineContext =~ 'parent::[a-zA-Z_0-9]*$'
+				let b:thisClassName = pcomplete#GetParentClass(pcomplete#GetClassNameFromFileContext())
+				" let b:i_className = 'elseif'
 			else
 				let b:thisClassName = pcomplete#GetClassNameFromLineContext()
 				" let b:i_className = 'else'
@@ -45,39 +49,36 @@ function! pcomplete#CompletePHP(findstart, base)
 		endif
 
 		if b:lineContext =~ '->[a-zA-Z_0-9]*$'
-"			let line = matchstr(b:rev_file_context, '^\s*\$\zs[a-zA-Z_0-9]\+\ze')
 			let b:var = matchstr(b:lineContext, '\$\zs[a-zA-Z_0-9]\+\ze')
 			if b:var == 'this'
 				let b:thisClassName = pcomplete#GetClassNameFromFileContext()
 			else
+				if b:defaultClass != ''
+					let b:thisClassName = b:defaultClass
+				endif
 "				let class = pcomplete#GetClassNameFromObject(var)
 			endif
 			call pcomplete#SetClassesData(b:thisClassName)
 			let b:methods = pcomplete#GetClassMethods(b:thisClassName, 'all')
-			return b:methods
+			let b:fields = pcomplete#GetClassFields(b:thisClassName, 'all')
+			return b:methods+b:fields
 		endif
-"
-""		if b:lineContext =~ '\(new\|extends\)\s\+[a-zA-Z_0-9]*$' ||
-""					\ b:lineContext =~ 'function\s\+[a-zA-Z_0-9]\+\s*(.*$' " TODO: nazwa pliku z klasą
-"			let classes = []
-"			if g:fnames != ''
-"				exe 'silent! vimgrep /^'.a:base.'.*\tc\(\t\|$\)/j '.g:fnames
-"				let qflist = getqflist()
-"				if len(qflist) > 0
-"					for field in qflist
-"						let item = matchstr(field['text'], '^[^[:space:]]\+')
-"						"let file = matchstr(field['text'], '^[a-zA-Z_0-9]\+\t\zs.\{-}\ze\t')
-"						"let prototype = matchstr(field['text'],
-"						"		\ 'function\s\+&\?[^[:space:]]\+\s*(\s*\zs.\{-}\ze\s*)\s*{\?')
-"						let classes += [{'word':item, 'kind':'c'}]
-"					endfor
-"				endif
-"			endif
-"			return classes
-"		endif
 
-"		let g:empty_list = ['x','y','z']
-"		return g:empty_list
+" na razie rezygnujemy z podpowiadania funkcji języka, więc podpowiadamy nazwę
+" klasy w każdym przypadku
+"		if b:lineContext =~ '\(new\|extends\)\s\+[a-zA-Z_0-9]*$' ||
+"					\ b:lineContext =~ 'function\s\+[a-zA-Z_0-9]\+\s*(.*$' " TODO: nazwa pliku z klasą
+			let classes = []
+			exe 'silent! vimgrep /^'.a:base.'.*\tc\(\t\|$\)/j '.g:fnames
+				let qflist = getqflist()
+				if len(qflist) > 0
+					for field in qflist
+						let item = matchstr(field['text'], '^[^[:space:]]\+')
+						let classes += [{'word':item, 'kind':'c'}]
+					endfor
+				endif
+			return classes
+"		endif
 
 	endif
 
@@ -164,13 +165,42 @@ function! pcomplete#GetClassMethods(className, type)
 					let item = matchstr(field['text'], '^[^[:space:]]\+')
 					let fname = matchstr(field['text'], '\t\zs\f\+\ze')
 					let prototype = matchstr(field['text'], '\/\^\s*\zs.*)\ze')
-					let classFile = matchstr(field['text'], '\/\zs\w*\ze\.class\.php')
+					let classFile = matchstr(field['text'], '\/\zs\w*\ze\.php')
 					let methods += [{'word':item, 'kind':'f', 'menu':classFile, 'info':prototype }]
 				endfor
 			endif
 		endif
 	endfor
 	return methods
+endfunction
+
+" zwraca tablicę pól klasy, wyekstrachowaną z pliku tagów
+function! pcomplete#GetClassFields(className, type)
+	let fields = []
+	for class in b:classList
+		let class_location = escape(pcomplete#GetClassLocation(class), " ./")
+		let g:type = a:type
+		if a:type == 'all'
+			let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.class_location.'.*\tp/j '.g:fnames
+		elseif a:type == 'static'
+			let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.class_location.'.*static.*\tp/j '.g:fnames
+		endif
+		if g:fnames != ''
+			exe pattern
+			let qflist = getqflist()
+			if len(qflist) > 0
+				for field in qflist
+					" File name
+					let item = matchstr(field['text'], '^[^[:space:]]\+')
+					let fname = matchstr(field['text'], '\t\zs\f\+\ze')
+					let prototype = matchstr(field['text'], '\/\^\s*\zs.*;\ze\$')
+					let classFile = matchstr(field['text'], '\/\zs\w*\ze\.php')
+					let fields += [{'word':item, 'kind':'p', 'menu':classFile, 'info':prototype }]
+				endfor
+			endif
+		endif
+	endfor
+	return fields
 endfunction
 
 " zwraca tablicę stałych klasy, wyekstrachowaną z pliku tagów
@@ -188,7 +218,8 @@ function! pcomplete#GetClassConstants(className)
 					let item = matchstr(field['text'], '^[^[:space:]]\+')
 					let fname = matchstr(field['text'], '\t\zs\f\+\ze')
 					let prototype = matchstr(field['text'], '\zsconst.*\ze\;\$\/')
-					let constants += [{'word':item, 'kind':'n', 'info':prototype }]
+					let classFile = matchstr(field['text'], '\/\zs\w*\ze\.class\.php')
+					let constants += [{'word':item, 'kind':'n', 'menu':classFile, 'info':prototype }]
 				endfor
 			endif
 		endif
@@ -213,7 +244,6 @@ function! pcomplete#GetParentClass(class)
 	if a:class != ''
 		exe 'silent! vimgrep /^'.a:class.'\t.*\s\+extends\s\+[a-zA-Z_0-9]\+.*/j '.g:fnames
 		let b:parent_qflist = getqflist()
-		let b:parenting += [b:parent_qflist]
 		if len(b:parent_qflist) > 0
 			for field in b:parent_qflist
 				let parentClass = matchstr(field['text'], 'extends\s\+\zs[a-zA-Z_0-9]\+\ze')
