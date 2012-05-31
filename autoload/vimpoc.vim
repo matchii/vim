@@ -51,8 +51,16 @@ function! vimpoc#CompletePHP(findstart, base)
             endif
 			if b:var != 'this' && b:var != ''
 				let b:className = vimpoc#GetClassNameFromObject(b:var)
-				let b:defaultClass = ''
+                if b:className != ''
+                    let b:defaultClass = ''
+                endif
             endif
+			if b:className == ''
+				let b:className = vimpoc#GetClassNameFromHint(b:var)
+                if b:className != ''
+                    let b:defaultClass = ''
+                endif
+			endif
 			if b:className == ''
 				if b:defaultClass != ''
 					let b:className = b:defaultClass
@@ -161,6 +169,27 @@ function! vimpoc#GetClassNameFromObject(var)
 	if class != ''
 		return class
 	endif
+    return ''
+endfunction
+
+" zwraca nazwę klasy z podpowiedzi w formie /* @var $zmienna Klasa */ w linii
+" powyżej
+function! vimpoc#GetClassNameFromHint(var)
+
+    if line('.') == 1
+        return ''
+    endif
+
+	let class = ''
+    let upLine = line('.')-1
+	if a:var != ''
+		let b:tmp = matchstr(getline(upLine), '\/\*\+\s\+@var\s\+\$'.a:var.'\s\+[a-zA-Z_0-9]*\s\+\*\/')
+		let class = matchstr(b:tmp, '\s\+\zs[a-zA-Z_0-9]*\ze\s\+')
+	endif
+
+	if class != ''
+		return class
+    endif
     return ''
 endfunction
 
