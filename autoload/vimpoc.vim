@@ -19,6 +19,7 @@ function! vimpoc#CompletePHP(findstart, base)
 			let b:defaultClass = ''
 		endif
 		let b:base = a:base
+        let b:className = ''
 
 		if b:lineContext =~ '::[a-zA-Z_0-9]*$'
 			" kontekst statyczny, jesteśmy prawie pewni, że ustalimy nazwę klasy
@@ -189,7 +190,13 @@ function! vimpoc#GetClassNameFromHint(var)
 
 	if class != ''
 		return class
+	else
+		let b:tmp = matchstr(b:rev_func_context, '\/\*\+\s\+@var\s\+\$'.a:var.'\s\+[a-zA-Z_0-9]*\s\+\*\/')
+		let class = matchstr(b:tmp, '\$[a-zA-Z_0-9]*\s\+\zs[a-zA-Z_0-9]*\ze')
     endif
+	if class != ''
+		return class
+	endif
     return ''
 endfunction
 
