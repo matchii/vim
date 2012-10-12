@@ -212,13 +212,10 @@ function! vimpoc#GetClassMethods(className, type)
         return methods
     endif
 	for class in b:classList
-		let class_location = escape(vimpoc#GetClassLocation(class), " ./")
 		let g:type = a:type
-		if a:type == 'all'
-			let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.class_location.'.*\tf/j '.g:fnames
-		elseif a:type == 'static'
-			let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.class_location.'.*static.*\tf/j '.g:fnames
-		endif
+
+        let pattern = vimpoc#GetSearchPattern(a:className, class, a:type, 'f')
+
 		if g:fnames != ''
 			exe pattern
 			let qflist = getqflist()
@@ -237,6 +234,29 @@ function! vimpoc#GetClassMethods(className, type)
 	return methods
 endfunction
 
+function! vimpoc#GetSearchPattern(className, class, type, resourceType)
+    let class_location = escape(vimpoc#GetClassLocation(a:class), " ./")
+    if a:type == 'all'
+        let static = ''
+        if b:var == 'this'
+            if a:className == a:class
+                let access = '.*\(public\|protected\|private\)'
+            else
+                let access = '.*\(public\|protected\)'
+            endif
+        else
+            let access = '.*\(public\)'
+        endif
+    elseif a:type == 'static'
+        let static = '.*static'
+        " FIXME podpowiadamy wszystkie metody statycznie, niezależnie od
+        " widoczności
+        let access = '.*\(public\|protected\|private\)'
+    endif
+    let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.class_location.access.static.'.*\t'.a:resourceType.'/j '.g:fnames
+    return pattern
+endfunction
+
 " zwraca tablicę pól klasy, wyekstrachowaną z pliku tagów
 function! vimpoc#GetClassFields(className, type)
 	let fields = []
@@ -246,11 +266,9 @@ function! vimpoc#GetClassFields(className, type)
 	for class in b:classList
 		let class_location = escape(vimpoc#GetClassLocation(class), " ./")
 		let g:type = a:type
-		if a:type == 'all'
-			let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.class_location.'.*\tp/j '.g:fnames
-		elseif a:type == 'static'
-			let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.class_location.'.*static.*\tp/j '.g:fnames
-		endif
+
+        let pattern = vimpoc#GetSearchPattern(a:className, class, a:type, 'p')
+
 		if g:fnames != ''
 			exe pattern
 			let qflist = getqflist()
@@ -323,53 +341,4 @@ function! vimpoc#GetParentClass(class)
 		endif
 	endif
 	return parentClass
-endfunction
-
-function! vimpoc#BalloonTip()
-	let g:wholeLine = getline(v:beval_lnum) . ', ' . v:beval_col
-	let g:lineBeforeCursor = g:wholeLine[0 : v:beval_col-1]
-	let g:wordBeforeCursor = matchstr(g:wholeLine[0 : v:beval_col-1], '\zs[a-zA-Z0-9_]\+\ze$')
-	let g:wordAfterCursor = matchstr(g:wholeLine[v:beval_col : -1], '\zs[a-zA-Z0-9_]\+\ze(')
-	let g:word = g:wordBeforeCursor . g:wordAfterCursor
-	let g:word_with_context = g:lineBeforeCursor . g:wordAfterCursor
-	if g:lineBeforeCursor =~ '::[a-zA-Z_0-9]*$'
-		if g:lineBeforeCursor =~ '\<self::[a-zA-Z_0-9]*$' " szukamy w tej klasie i jej rodzicach
-			let b:className = vimpoc#GetClassNameFromFileContext()
-			" let b:i_className = 'if'
-		elseif g:wordBeforeCursor =~ '\<parent::[a-zA-Z_0-9]*$'
-			let b:className = vimpoc#GetParentClass(vimpoc#GetClassNameFromFileContext())
-			" let b:i_className = 'elseif'
-		else
-			let b:className = vimpoc#GetClassNameFromLineContext(g:lineBeforeCursor)
-			" let b:i_className = 'else'
-		endif
-		let b:location = vimpoc#GetClassLocation(b:className)
-		"if b:location == '' " brak klasy w tagach, TODO wyświetlić komunikat
-		"	return []
-		"endif
-		"return b:className
-		"call vimpoc#SetClassInheritanceTree(b:className)
-		"let b:static_methods = vimpoc#GetClassMethods(b:className, 'static')
-		"let b:constants = vimpoc#GetClassConstants(b:className)
-		"return b:static_methods+b:constants
-	endif
-	"if g:wholeLine =~ '::[a-zA-Z_0-9]\+'
-		"let g:word = matchstr(g:wholeLine, '\zs\<.*\>::\<.*\>\ze(')
-		"redir => g:doc
-		"let g:command = '!grep -B 20 '. g:word . ' ' . expand('%:p')
-		"silent! execute g:command
-		"redir END
-		"let g:doc2 = g:doc
-		"let g:doc = substitute(g:doc[stridx(g:doc, '/**') : stridx(g:doc, '*/')+1], '\r', '', 'g')
-		"return g:word
-	"endif
-	"return v:beval_lnum . ', ' . v:beval_col . ', ' . bufname(v:beval_bufnr)
-	return 'wholeLine: ' . g:wholeLine . "\n" .
-				\'lineBeforeCursor: ' . g:lineBeforeCursor . "\n" .
-				\'wordBeforeCursor: ' . g:wordBeforeCursor . "\n" .
-				\'wordAfterCursor: ' . g:wordAfterCursor . "\n" .
-				\'word: ' . g:word . "\n" .
-				\'word_with_context: ' . g:word_with_context . "\n" .
-				\'className: ' . b:className . "\n" .
-				\'location: ' . b:location
 endfunction
