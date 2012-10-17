@@ -58,7 +58,7 @@ function! MakeGetter(variable)
 	let var = a:variable
 	let cvar = substitute(var, '^_', '', '')
 	let cvar = toupper(cvar[0]).cvar[1:]
-	let indent = "\t"
+	let indent = "    "
 	let l = line('.')
 	let text = [
 		\ '',
@@ -67,14 +67,14 @@ function! MakeGetter(variable)
 		\ indent.indent."return $this->".var.";",
 		\ indent."}",
 	\ ]
-	call append(line('$')-1, text)
+	call append(searchpair('{', '', '}', 'Wnr')-1, text)
 endfunction
 
 function! MakeSetter(variable)
 	let var = a:variable
 	let cvar = substitute(var, '^_', '', '')
 	let uvar = toupper(cvar[0]).cvar[1:]
-	let indent = "\t"
+	let indent = "    "
 	let l = line('.')
 	let text = [
 		\ '',
@@ -84,7 +84,44 @@ function! MakeSetter(variable)
 		\ indent.indent."return $this;",
 		\ indent."}",
 	\ ]
-	call append(line('$')-1, text)
+	call append(searchpair('{', '', '}', 'Wnr')-1, text)
+endfunction
+
+function! MakeClass()
+	let text = [
+		\ '<?php',
+		\ '',
+		\ "class " . matchstr(@%, '\zs[a-zA-Z_]\+\ze\.'),
+		\ "{",
+		\ "}",
+	\ ]
+	call append(0, text)
+endfunction
+
+function! MakeMethod(name)
+    execute ':d'
+	let indent = "    "
+    let text = [
+                \ indent . 'public function ' . a:name . '()',
+                \ indent . '{',
+                \ indent . '}',
+                \ ]
+    call append(line('.')-1, text)
+endfunction
+
+function! MakeTestMethod(name)
+    execute ':d'
+	let indent = "    "
+    let text = [
+                \ indent . '/**',
+                \ indent . ' * @test',
+                \ indent . ' * @covers ' . matchstr(@%, '\zs[a-zA-Z_]\+\zeTest\.') . '::' . a:name,
+                \ indent . ' */',
+                \ indent . 'public function ' . a:name . '()',
+                \ indent . '{',
+                \ indent . '}',
+                \ ]
+    call append(line('.')-1, text)
 endfunction
 
 function! OpenTagInNewTab(tag)
@@ -93,7 +130,16 @@ function! OpenTagInNewTab(tag)
 endfunction
 
 function! SetProject()
-	execute '!ctags -R --languages=PHP --exclude=lib/tag_links/symfony/lib/plugins -f tags *'
+    if filereadable('.project.vim')
+        execute 'source .project.vim'
+    else
+        let g:unit_test_bootstrap = 'test/bootstrap/unit.php'
+        let g:ctags_exclude = '--exclude=lib/tag_links/symfony/lib/plugins'
+    endif
+endfunction
+
+function! BuildTags()
+	execute '!ctags -R --languages=PHP '.g:ctags_exclude.' -f tags *'
 endfunction
 
 function! VarDump(var, value, line)
@@ -111,7 +157,7 @@ function! UnderscoreToDash(content)
 endfunction
 
 function! GetPHPDocumentation(name)
-	execute "!firefox www.php.net/manual/en/function." . UnderscoreToDash(a:name)
+	execute "!firefox www.php.net/manual/en/function." . UnderscoreToDash(a:name) . ".php"
 endfunction
 
 " formatuje listę np. numerów tak żeby pasowały do INa w zapytaniu
@@ -120,6 +166,31 @@ function! FormatForIn()
 	execute "%s/$/,/"
 	execute "$s/,$//"
 	normal ggVGgq<CR><F5>
+endfunction
+
+" wykonuje testy jednostkowe
+function! RunUnitTests()
+    execute '!phpunit --bootstrap=' . g:unit_test_bootstrap . ' test/phpunit/unit/'
+endfunction
+
+" wykonuje testy z aktualnego pliku
+function! RunThisUnitTest()
+    if @% =~ 'Test\.php$'
+        execute '!phpunit --bootstrap=' . g:unit_test_bootstrap . ' %'
+    else
+        call RunTestForThisClass()
+    endif
+endfunction
+
+function! RunTestForThisClass()
+    let testClassName = matchstr(@%, '\zs[a-zA-Z_]\+\ze\.')
+    let cmd = 'find . -name ' . testClassName . 'Test.php'
+    let testFile = glob("`" . cmd . "`")
+    if len(testFile) > 0
+        execute '!phpunit --bootstrap=' . g:unit_test_bootstrap . ' ' . testFile
+    else
+        echo 'Nie znaleziono testów dla tego pliku'
+    endif
 endfunction
 
 function! Balonik()
