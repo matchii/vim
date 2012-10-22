@@ -112,13 +112,16 @@ endfunction
 function! MakeTestMethod(name)
     execute ':d'
 	let indent = "    "
+    let class = matchstr(@%, '\zs[a-zA-Z_]\+\zeTest\.')
     let text = [
                 \ indent . '/**',
                 \ indent . ' * @test',
-                \ indent . ' * @covers ' . matchstr(@%, '\zs[a-zA-Z_]\+\zeTest\.') . '::' . a:name,
+                \ indent . ' * @covers ' . class . '::' . a:name,
                 \ indent . ' */',
                 \ indent . 'public function ' . a:name . '()',
                 \ indent . '{',
+                \ indent . indent . '/** @var $object Testing' . class . ' */',
+                \ indent . indent . '$object = $this->getObject();',
                 \ indent . '}',
                 \ ]
     call append(line('.')-1, text)
@@ -191,19 +194,4 @@ function! RunTestForThisClass()
     else
         echo 'Nie znaleziono testów dla tego pliku'
     endif
-endfunction
-
-function! Balonik()
-	let g:context = getline(v:beval_lnum)
-	if g:context =~ '\(::\|->\)[a-zA-Z_0-9]\+'
-		let g:word = matchstr(g:context, '->\zs.*\ze(')
-		redir => g:doc
-		let g:command = '!grep -B 20 '. g:word . ' ' . expand('%:p')
-		silent! execute g:command
-		redir END
-		let g:doc2 = g:doc
-		let g:doc = substitute(g:doc[stridx(g:doc, '/**') : stridx(g:doc, '*/')+1], '\r', '', 'g')
-		return g:doc
-	endif
-	return v:beval_lnum . ', ' . v:beval_col . ', ' . bufname(v:beval_bufnr)
 endfunction
