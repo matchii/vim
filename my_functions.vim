@@ -195,3 +195,8 @@ function! RunTestForThisClass()
         echo 'Nie znaleziono testów dla tego pliku'
     endif
 endfunction
+
+" wykrywa bałagan w aktualnym pliku
+function! RunMessDetection()
+    execute '!phpmd ' . @% . ' text codesize,controversial,design,naming,unusedcode'
+endfunction
