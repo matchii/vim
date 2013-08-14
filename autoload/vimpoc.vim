@@ -104,8 +104,11 @@ function! vimpoc#FindAndSetContext()
 		let b:startOfCompl = tmp[1] - 1
 		"let b:iii = 'else'
 	endif
-    let b:funcLine = search('\<function\>', 'bn')
-    let b:rev_func_context = getline(b:funcLine, '.')
+    let b:funcLine = search('\<function\>\s\+[a-zA-Z_0-9]\+(', 'bn')
+    if b:funcLine > 0
+        let b:rev_func_context = getline(b:funcLine, '.')
+    else
+        let b:rev_func_context = []
 	return b:startOfCompl
 endfunction
 
@@ -173,30 +176,36 @@ function! vimpoc#GetClassNameFromObject(var)
     return ''
 endfunction
 
-" zwraca nazwę klasy z podpowiedzi w formie /* @var $zmienna Klasa */ w linii
-" powyżej
+" zwraca nazwę klasy z podpowiedzi w formie @var $zmienna Klasa w linii
+" powyżej lub w kontekście klasy
 function! vimpoc#GetClassNameFromHint(var)
+
+    if a:var == ''
+        return ''
+    endif
 
     if line('.') == 1
         return ''
     endif
 
-	let class = ''
-    let upLine = line('.')-1
-	if a:var != ''
-		let b:tmp = matchstr(getline(upLine), '\/\*\+\s\+@var\s\+\$'.a:var.'\s\+[a-zA-Z_0-9]*\s\+\*\/')
-		let class = matchstr(b:tmp, '\s\+\zs[a-zA-Z_0-9]*\ze\s\+')
-	endif
-
-	if class != ''
-		return class
-	else
-		let b:tmp = matchstr(b:rev_func_context, '\/\*\+\s\+@var\s\+\$'.a:var.'\s\+[a-zA-Z_0-9]*\s\+\*\/')
-		let class = matchstr(b:tmp, '\$[a-zA-Z_0-9]*\s\+\zs[a-zA-Z_0-9]*\ze')
+    let class = ''
+    " jeśli istnieje kontekst funkcji, to go przeszukujemy
+    if b:rev_func_context != []
+        let b:tmp = matchstr(b:rev_func_context, '@var\s\+\$'.a:var.'\s\+[a-zA-Z_0-9]*')
+        let class = matchstr(b:tmp, '\$[a-zA-Z_0-9]*\s\+\zs[a-zA-Z_0-9]*\ze')
+        if class != ''
+            return class
+        endif
+        return ''
     endif
-	if class != ''
-		return class
-	endif
+
+    let b:rev_file_context = getline(1, '.')
+    let b:tmp = matchstr(b:rev_file_context, '@var\s\+\$'.a:var.'\s\+[a-zA-Z_0-9]*')
+    let class = matchstr(b:tmp, '\s\+\zs[a-zA-Z_0-9]*\ze\s\+')
+
+    if class != ''
+        return class
+    endif
     return ''
 endfunction
 
@@ -340,5 +349,15 @@ function! vimpoc#GetParentClass(class)
 			endfor
 		endif
 	endif
-	return parentClass
+    return parentClass
+endfunction
+
+function! vimpoc#IsClassKnown(class)
+    exe 'silent! vimgrep /^\s*class\s\+'.a:class.'\>'.g:fnames
+    let b:known_qflist = getqflist()
+    if len(b:known_qflist) > 0
+        return 1
+    else
+        return 0
+    endif
 endfunction
