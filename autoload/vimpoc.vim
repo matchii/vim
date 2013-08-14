@@ -109,6 +109,7 @@ function! vimpoc#FindAndSetContext()
         let b:rev_func_context = getline(b:funcLine, '.')
     else
         let b:rev_func_context = []
+    endif
 	return b:startOfCompl
 endfunction
 
@@ -216,35 +217,46 @@ endfunction
 
 " zwraca tablicę metod klasy, wyekstrachowaną z pliku tagów
 function! vimpoc#GetClassMethods(className, type)
-	let methods = []
+    let methods = []
     if a:className == ''
         return methods
     endif
-	for class in b:classList
-		let g:type = a:type
+    for class in b:classList
+        let g:type = a:type
+        let class_location = escape(vimpoc#GetClassLocation(class), " ./")
 
-        let pattern = vimpoc#GetSearchPattern(a:className, class, a:type, 'f')
+        " zwykłe metody
+        let pattern = vimpoc#GetSearchPattern(a:className, class, class_location, a:type, 'f')
+        exe pattern
+        let qflist = getqflist()
+        if len(qflist) > 0
+            for field in qflist
+                " File name
+                let item = matchstr(field['text'], '^[^[:space:]]\+')
+                let prototype = matchstr(field['text'], '\/\^\s*\zs.*)\ze')
+                let classFile = matchstr(field['text'], '\/\zs\w*\ze\.php')
+                let methods += [{'word':item, 'kind':'f', 'menu':classFile, 'info':prototype }]
+            endfor
+        endif
 
-		if g:fnames != ''
-			exe pattern
-			let qflist = getqflist()
-			if len(qflist) > 0
-				for field in qflist
-					" File name
-					let item = matchstr(field['text'], '^[^[:space:]]\+')
-					let fname = matchstr(field['text'], '\t\zs\f\+\ze')
-					let prototype = matchstr(field['text'], '\/\^\s*\zs.*)\ze')
-					let classFile = matchstr(field['text'], '\/\zs\w*\ze\.php')
-					let methods += [{'word':item, 'kind':'f', 'menu':classFile, 'info':prototype }]
-				endfor
-			endif
-		endif
-	endfor
-	return methods
+        " metody wprowadzone poprzez znacznik @method
+        let tm_pattern = 'silent! vimgrep /^'.b:base.'.*\t'.class_location.'.*@method\>/j ' . g:fnames
+        exe tm_pattern
+        let tm_qflist = getqflist()
+        if len(tm_qflist) > 0
+            for field in tm_qflist
+                " File name
+                let item = matchstr(field['text'], '^[^[:space:]]\+')
+                let prototype = matchstr(field['text'], '\/\^\s*\zs.*\ze\$\/')
+                let classFile = matchstr(field['text'], '\/\zs\w*\ze\.php')
+                let methods += [{'word':item, 'kind':'f', 'menu':classFile, 'info':prototype }]
+            endfor
+        endif
+    endfor
+    return methods
 endfunction
 
-function! vimpoc#GetSearchPattern(className, class, type, resourceType)
-    let class_location = escape(vimpoc#GetClassLocation(a:class), " ./")
+function! vimpoc#GetSearchPattern(className, class, class_location, type, resourceType)
     if a:type == 'all'
         let static = ''
         if b:var == 'this'
@@ -262,7 +274,7 @@ function! vimpoc#GetSearchPattern(className, class, type, resourceType)
         " widoczności
         let access = '.*\(public\|protected\|private\)'
     endif
-    let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.class_location.access.static.'.*\t'.a:resourceType.'/j '.g:fnames
+    let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.a:class_location.access.static.'.*\t'.a:resourceType.'/j '.g:fnames
     return pattern
 endfunction
 
@@ -276,7 +288,7 @@ function! vimpoc#GetClassFields(className, type)
 		let class_location = escape(vimpoc#GetClassLocation(class), " ./")
 		let g:type = a:type
 
-        let pattern = vimpoc#GetSearchPattern(a:className, class, a:type, 'p')
+        let pattern = vimpoc#GetSearchPattern(a:className, class, class_location, a:type, 'p')
 
 		if g:fnames != ''
 			exe pattern
