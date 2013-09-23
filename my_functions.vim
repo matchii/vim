@@ -1,4 +1,4 @@
-" obejmuje fragment pomiędzy liniami blokiem if i zwiększa wcięcie o 1 poziom
+" SetIfBlock obejmuje fragment pomiędzy liniami blokiem if i zwiększa wcięcie o 1 poziom {{{
 function! SetIfBlock(first_line, last_line)
 	if a:first_line > a:last_line
 		return
@@ -14,8 +14,9 @@ function! SetIfBlock(first_line, last_line)
 	endwhile
 	call append(prev_line, indent."if () {")
 endfunction
+" }}}
 
-" obejmuje fragment pomiędzy liniami blokiem try..catch i zwiększa wcięcie o 1 poziom
+" SetTryCatchBlock obejmuje fragment pomiędzy liniami blokiem try..catch i zwiększa wcięcie o 1 poziom {{{
 function! SetTryCatchBlock(first_line, last_line)
 	if a:first_line > a:last_line
 		return
@@ -32,7 +33,9 @@ function! SetTryCatchBlock(first_line, last_line)
 	endwhile
 	call append(prev_line, indent."try {")
 endfunction
+" }}}
 
+" SetComment {{{
 function! SetComment(first_line, last_line)
 	if a:first_line > a:last_line
 		return
@@ -48,12 +51,16 @@ function! SetComment(first_line, last_line)
 	endwhile
 	call append(prev_line, '/*')
 endfunction
+" }}}
 
+" MakeSetterAndGetter {{{
 function! MakeSetterAndGetter(variable)
 	call MakeSetter(a:variable)
 	call MakeGetter(a:variable)
 endfunction
+" }}}
 
+" MakeGetter {{{
 function! MakeGetter(variable)
 	let var = a:variable
 	let cvar = substitute(var, '^_', '', '')
@@ -69,7 +76,9 @@ function! MakeGetter(variable)
 	\ ]
 	call append(searchpair('{', '', '}', 'Wnr')-1, text)
 endfunction
+" }}}
 
+" MakeSetter {{{
 function! MakeSetter(variable)
 	let var = a:variable
 	let cvar = substitute(var, '^_', '', '')
@@ -86,7 +95,9 @@ function! MakeSetter(variable)
 	\ ]
 	call append(searchpair('{', '', '}', 'Wnr')-1, text)
 endfunction
+" }}}
 
+" MakeClass {{{
 function! MakeClass()
 	let text = [
 		\ '<?php',
@@ -97,7 +108,9 @@ function! MakeClass()
 	\ ]
 	call append(0, text)
 endfunction
+" }}}
 
+" MakeMethod {{{
 function! MakeMethod(name)
     execute ':d'
 	let indent = "    "
@@ -108,7 +121,9 @@ function! MakeMethod(name)
                 \ ]
     call append(line('.')-1, text)
 endfunction
+" }}}
 
+" MakeTestMethod {{{
 function! MakeTestMethod(name)
     execute ':d'
 	let indent = "    "
@@ -122,16 +137,21 @@ function! MakeTestMethod(name)
                 \ indent . '{',
                 \ indent . indent . '/** @var $object Testing' . class . ' */',
                 \ indent . indent . '$object = $this->getObject();',
+                \ indent . indent . '$this->fail("TODO");',
                 \ indent . '}',
                 \ ]
     call append(line('.')-1, text)
 endfunction
+" }}}
 
+" OpenTagInNewTab {{{
 function! OpenTagInNewTab(tag)
 	execute "Te"
 	execute "tjump ".a:tag
 endfunction
+" }}}
 
+" SetProject {{{
 function! SetProject()
     if filereadable('.project.vim')
         execute 'source .project.vim'
@@ -140,43 +160,48 @@ function! SetProject()
         let g:ctags_exclude = '--exclude=lib/tag_links/symfony/lib/plugins'
     endif
 endfunction
+" }}}
 
+" BuildTags {{{
 function! BuildTags()
 	execute '!ctags -R --languages=PHP '.g:ctags_exclude.' -f tags *'
 endfunction
+" }}}
 
+" VarDump {{{
 function! VarDump(var, value, line)
 	execute "!echo linia ".a:line.":	".a:var." = ".a:value." >> /home/maciej/vim_var_dump.txt"
 endfunction
+" }}}
 
-"function! FormatCode()
-"	execute "%s/[\s\t]\+$//"
-"	execute "%s/^\(\s*\)\t\(.*\)/\1    \2/g"
-"	execute "nohlsearch"
-"endfunction
-
+" UnderscoreToDash {{{
 function! UnderscoreToDash(content)
 	return substitute(a:content, "_", "-", "g")
 endfunction
+" }}}
 
+" {{{
 function! GetPHPDocumentation(name)
 	execute "!firefox www.php.net/manual/en/function." . UnderscoreToDash(a:name) . ".php"
 endfunction
+" }}}
 
-" formatuje listę np. numerów tak żeby pasowały do INa w zapytaniu
+" FormatForIn formatuje listę np. numerów tak żeby pasowały do INa w zapytaniu {{{
 function! FormatForIn()
 	execute "g/^$/d"
 	execute "%s/$/,/"
 	execute "$s/,$//"
-	normal ggVGgq<CR><F5>
+	normal! ggVGgq<CR><F5>
 endfunction
+" }}}
 
-" wykonuje testy jednostkowe
+" RunUnitTests wykonuje testy jednostkowe {{{
 function! RunUnitTests()
     execute '!phpunit --bootstrap=' . g:unit_test_bootstrap . ' test/phpunit/unit/'
 endfunction
+" }}}
 
-" wykonuje testy z aktualnego pliku
+" RunThisUnitTest wykonuje testy z aktualnego pliku {{{
 function! RunThisUnitTest()
     if @% =~ 'Test\.php$'
         execute '!phpunit --bootstrap=' . g:unit_test_bootstrap . ' %'
@@ -184,7 +209,9 @@ function! RunThisUnitTest()
         call RunTestForThisClass()
     endif
 endfunction
+" }}}
 
+" RunTestForThisClass {{{
 function! RunTestForThisClass()
     let testClassName = matchstr(@%, '\zs[a-zA-Z_]\+\ze\.')
     let cmd = 'find . -name ' . testClassName . 'Test.php'
@@ -195,8 +222,10 @@ function! RunTestForThisClass()
         echo 'Nie znaleziono testów dla tego pliku'
     endif
 endfunction
+" }}}
 
-" wykrywa bałagan w aktualnym pliku
+" RunMessDetection wykrywa bałagan w aktualnym pliku {{{
 function! RunMessDetection()
-    execute '!phpmd ' . @% . ' text codesize,controversial,design,naming,unusedcode'
+    execute '!phpmd ' . @% . ' text codesize,design,unusedcode'
 endfunction
+" }}}
