@@ -46,6 +46,7 @@ function! vimpoc#CompletePHP(findstart, base)
 
 		if b:lineContext =~ '->[a-zA-Z_0-9]*$'
 			let b:var = matchstr(b:lineContext, '\$\zs[a-zA-Z_0-9]\+\ze->[a-zA-Z_0-9]*$')
+            call vimpoc#Debug('zmienna: ' . b:var)
 			if b:var == 'this'
 				let b:className = vimpoc#GetClassNameFromFileContext()
 				let b:defaultClass = ''
@@ -83,10 +84,10 @@ function! vimpoc#CompletePHP(findstart, base)
 				if len(qflist) > 0
 					for field in qflist
 						let item = matchstr(field['text'], '^[^[:space:]]\+')
-						let classes += [{'word':item, 'kind':'c'}]
+						let classes += [{'word':item, 'kind': 'c'}]
 					endfor
 				endif
-			return classes
+			return classes + vimpoc#GetBuiltInFunctions(a:base)
 "		endif
 
 	endif
@@ -224,6 +225,9 @@ function! vimpoc#GetClassMethods(className, type)
     for class in b:classList
         let g:type = a:type
         let class_location = escape(vimpoc#GetClassLocation(class), " ./")
+        if class_location == ''
+            continue
+        endif
 
         " zwykłe metody
         let pattern = vimpoc#GetSearchPattern(a:className, class, class_location, a:type, 'f')
@@ -286,6 +290,9 @@ function! vimpoc#GetClassFields(className, type)
     endif
 	for class in b:classList
 		let class_location = escape(vimpoc#GetClassLocation(class), " ./")
+        if class_location == ''
+            continue
+        endif
 		let g:type = a:type
 
         let pattern = vimpoc#GetSearchPattern(a:className, class, class_location, a:type, 'p')
@@ -373,3 +380,13 @@ function! vimpoc#IsClassKnown(class)
         return 0
     endif
 endfunction
+
+function! vimpoc#GetBuiltInFunctions(prefix)
+    return values(filter(copy(g:funcs), 'v:key =~ "^'.a:prefix.'"'))
+endfunction
+
+function! vimpoc#Debug(text)
+    echom 'vimpoc: ' . a:text
+endfunction
+
+source ~/.vim/autoload/funcs.vim
