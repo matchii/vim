@@ -180,7 +180,7 @@ function! UnderscoreToDash(content)
 endfunction
 " }}}
 
-" {{{
+" GetPHPDocumentation {{{
 function! GetPHPDocumentation(name)
 	execute "!firefox www.php.net/manual/en/function." . UnderscoreToDash(a:name) . ".php"
 endfunction
@@ -227,5 +227,22 @@ endfunction
 " RunMessDetection wykrywa bałagan w aktualnym pliku {{{
 function! RunMessDetection()
     execute '!phpmd ' . @% . ' text codesize,design,unusedcode'
+endfunction
+" }}}
+
+" GrepOperator {{{
+function! s:GrepOperator(type)
+    let saved_unnamed_register = @@
+
+    if a:type ==# 'v'
+        execute "normal! `<v`>y"
+    elseif a:type ==# 'char'
+        execute "normal! `[v`]y"
+    else
+        return
+    endif
+    silent execute "grep! -R " . shellescape(@@) . " ."
+    copen
+    let @@ = saved_unnamed_register
 endfunction
 " }}}

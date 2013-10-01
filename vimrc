@@ -6,6 +6,11 @@
 "    execute 'set columns=130 lines=38'
 "endif
 
+
+""""""""""""""""""""""""""""""""""""""""
+""""" opcje ogólne
+""""""""""""""""""""""""""""""""""""""""
+
 set comments+=b:\"
 
 filetype on
@@ -50,7 +55,6 @@ set showcmd
 set ts=4
 set shiftwidth=4
 set list
-" set listchars=tab:›·
 set listchars=tab:+—,trail:·
 set expandtab
 set softtabstop=4
@@ -69,7 +73,68 @@ set wildmode=list:longest,full
 
 let mapleader = "L"
 
+let completeopt="menuone,longest,preview"
+
+""""""""""""""""""""""""""""""""""""""""
+""""" opcje dla PHP
+""""""""""""""""""""""""""""""""""""""""
+
+augroup php_options
+    autocmd!
+    " zawijanie klas i metod
+    autocmd Filetype php let php_folding=1
+    " sprawdzanie składni
+    autocmd Filetype php set makeprg=php\ -l\ %
+    autocmd Filetype php set errorformat=%m\ in\ %f\ on\ line\ %l
+augroup END
+
+""""""""""""""""""""""""""""""""""""""""
+""""" własny kod
+""""""""""""""""""""""""""""""""""""""""
+
 source ~/.vim/my_functions.vim
+
+augroup vimpoc
+    autocmd!
+    autocmd FileType php :set omnifunc=vimpoc#CompletePHP
+augroup END
+
+
+""""""""""""""""""""""""""""""""""""""""
+""""" mapowania ogólne
+""""""""""""""""""""""""""""""""""""""""
+
+" grep
+nnoremap <Leader>g :set operatorfunc=<SID>GrepOperator<CR>g@
+vnoremap <Leader>g :<C-U>call <SID>GrepOperator(visualmode())<CR>
+
+" kopiowanie całego bufora do schowka systemowego
+nnoremap <Leader>j <ESC>ggVG"+y<C-O><C-O>
+
+" wybór zakładki
+nnoremap <A-1> 1gt
+nnoremap <A-2> 2gt
+nnoremap <A-3> 3gt
+nnoremap <A-4> 4gt
+nnoremap <A-5> 5gt
+nnoremap <A-6> 6gt
+nnoremap <A-7> 7gt
+nnoremap <A-8> 8gt
+nnoremap <A-9> 9gt
+" poprzednia / następna zakładka
+nnoremap <A-[> gT
+nnoremap <A-]> gt
+
+""""""""""""""""""""""""""""""""""""""""
+""""" mapowania PHP
+""""""""""""""""""""""""""""""""""""""""
+
+augroup php
+    autocmd!
+    autocmd Filetype php noremap K :call GetPHPDocumentation(expand("<cword>"))<CR><CR>
+augroup END
+
+
 " otaczanie blokiem if
 noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>kf(a
 vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>kf(a
@@ -86,40 +151,8 @@ noremap <Leader>mf :call MakeMethod(expand("<cword>"))<CR>
 noremap <Leader>mt :call MakeTestMethod(expand("<cword>"))<CR>k
 " ustawianie słowa pod kursorem jako domyślnej klasy do omni
 noremap <Leader>k :let b:defaultClass = expand("<cword>")<CR>
-vnoremap <Leader>k :<BS><BS><BS><BS><BS>let b:defaultClass = getline(".")[col("'<")-1:col("'>")-1]<CR>
+vnoremap <Leader>k :<C-U>let b:defaultClass = getline(".")[col("'<")-1:col("'>")-1]<CR>
 
-" ładowanie pluginu do uzupełniania tagów
-" :au Filetype phtml,xml,tpl source ~/.vim/plugin/closetag.vim
-
-":au FileType php :set tags+=~/intranet/tags;
-" :au FileType php :set omnifunc=phpcomplete#CompletePHP
-augroup php
-    autocmd!
-    autocmd FileType php :set omnifunc=vimpoc#CompletePHP
-    autocmd Filetype php noremap K :call GetPHPDocumentation(expand("<cword>"))<CR><CR>
-augroup END
-let completeopt="menuone,longest,preview"
-" :au FileType sql :set omnifunc=sqlcomplete#Complete
-
-" ścieżka do rope'a
-"source /home/maciej/bin/rope.vim
-
-" ścieżka do ctags dla taglista
-let Tlist_Ctags_Cmd="/usr/bin/ctags-exuberant"
-let Tlist_Use_Right_Window=1
-let Tlist_GainFocus_On_ToggleOpen=1
-let Tlist_Show_One_File=1
-let Tlist_Close_On_Select=1
-
-" kolorowanie składni sql w plikach php
-" let php_sql_query=1
-
-" zawijanie klas i metod
-let php_folding=1
-
-" sprawdzanie składni
-set makeprg=php\ -l\ %
-set errorformat=%m\ in\ %f\ on\ line\ %l
 noremap <Leader>mm :execute 'make %'<CR>
 
 " tworzy szablon klasy na podstawie nazwy pliku
@@ -136,11 +169,9 @@ noremap <Leader>md :call RunMessDetection()<CR>
 
 noremap <Leader>fsp :call SetProject()<CR>
 noremap <Leader>bt :call BuildTags()<CR><CR>
-" kopiowanie całego bufora do schowka systemowego
-noremap <Leader>j <ESC>ggVG"+y<C-O><C-O>
 " objęcie słowa apostrofami/cudzysłowami/nawiasami
 noremap <Leader>( <ESC>ciw(<C-R>")<ESC>
-vnoremap <Leader>( "qc(<Esc>pa)<Esc>
+vnoremap <Leader>( "qc(<Esc>pa)<Esc>%
 vnoremap <Leader>[ "qc[<Esc>pa]<Esc>
 vnoremap <Leader>{ "qc{<Esc>pa}<Esc>
 noremap <Leader>' <ESC>ciw'<C-R>"'<ESC>
@@ -168,13 +199,6 @@ inoremap <expr> ]  strpart(getline('.'), col('.')-1, 1) == "]" ? "\<Right>" : "]
 inoremap <expr> "  strpart(getline('.'), col('.')-1, 1) == '"' ? "\<Right>" : '""<Left>'
 inoremap <expr> '  strpart(getline('.'), col('.')-1, 1) == "'" ? "\<Right>" : "''<Left>"
 inoremap <expr> `  strpart(getline('.'), col('.')-1, 1) == "`" ? "\<Right>" : "``<Left>"
-
-" ścieżka do katalogu payrolla
-"let g:smf_payroll_root_dir='/home/maciej/projects/intranet/www/payroll'
-"map <Leader>pbs :execute '!'.g:smf_payroll_root_dir.'/symfony propel:build-model && '.g:smf_payroll_root_dir.'/symfony cc'<CR>
-"map <Leader>pcc :execute '!'.g:smf_payroll_root_dir.'/symfony cc'<CR>
-"map <Leader>pct :execute '!ctags -R --links=no --languages=PHP -f '.g:smf_payroll_root_dir.'/tags '.g:smf_payroll_root_dir.'/* '<CR>
-""" przeniesione do pluginu
 
 " wywołanie skryptu formatującego kod
 noremap <F2> <ESC>:source ~/.vim/checkstyle<CR><CR>
@@ -230,12 +254,9 @@ augroup filetype_vim
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
 
-" łączy się z bazami
-"let g:dbext_default_profile_db4_Intranet = 'type=MYSQL:user=maciej.watras:passwd=ccig:host=192.168.0.4:port=3306:dbname=Intranet'
-"let g:dbext_default_profile_db4_payroll2 = 'type=MYSQL:user=maciej.watras:passwd=ccig:host=192.168.0.4:port=3306:dbname=payroll2'
-"let g:dbext_default_profile_db6_intranet = 'type=MYSQL:user=maciej.watras:passwd=NGRoWwgVUKneWR:host=192.168.0.6:port=3306:dbname=intranet'
-"let g:dbext_default_profile_db6_payroll2 = 'type=MYSQL:user=maciej.watras:passwd=NGRoWwgVUKneWR:host=192.168.0.6:port=3306:dbname=payroll2'
-"let g:dbext_default_use_sep_result_buffer = 1
+""""""""""""""""""""""""""""""""""""""""
+""""" skróty
+""""""""""""""""""""""""""""""""""""""""
 
 "iab ii if () {<CR>}<ESC>k3l
 "iab ee else<CR>{<CR>}<ESC>k
