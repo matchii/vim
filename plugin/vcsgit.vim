@@ -108,7 +108,7 @@ function! s:gitFunctions.Annotate(argList)
 			" Perform annotation of the version indicated by the current line.
 			let options = matchstr(getline('.'),'^\x\+')
 		else
-			let options = ''
+			let options = ' -c '
 		endif
 	elseif len(a:argList) == 1 && a:argList[0] !~ '^-'
 		let options = a:argList[0]

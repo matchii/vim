@@ -1,10 +1,11 @@
-"if has("gui_running")
+if has("gui_running")
+    winpos 858 23
 "    execute 'cd ~/gitrepo'
 "    execute 'silent e .'
 "    " poniższe nie działa, bo gnome-shell nadpisuje to swoimi wartościami,
 "    " a ja nie wiem gdzie je zmienić :(
 "    execute 'set columns=130 lines=38'
-"endif
+endif
 
 
 """"""""""""""""""""""""""""""""""""""""
@@ -55,7 +56,8 @@ set showcmd
 set ts=4
 set shiftwidth=4
 set list
-set listchars=tab:+—,trail:·
+set list listchars=tab:\|\ ,trail:·
+""set list listchars=tab:+—,trail:·
 set expandtab
 set softtabstop=4
 
@@ -221,6 +223,7 @@ noremap <F7> <Esc><C-w>j:q<CR>
 
 " zamyka górny bufor
 noremap <F8> <Esc><C-w>k:q<CR>
+nnoremap <A-'> <Esc>:q<CR>
 
 " powrót do aktualnego katalogu
 noremap <F9> :silent e .<CR>
