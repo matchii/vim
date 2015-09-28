@@ -1,12 +1,3 @@
-"if has("gui_running")
-"    execute 'cd ~/gitrepo'
-"    execute 'silent e .'
-"    " poniższe nie działa, bo gnome-shell nadpisuje to swoimi wartościami,
-"    " a ja nie wiem gdzie je zmienić :(
-"    execute 'set columns=130 lines=38'
-"endif
-
-
 """"""""""""""""""""""""""""""""""""""""
 """"" opcje ogólne
 """"""""""""""""""""""""""""""""""""""""
@@ -71,9 +62,14 @@ filetype plugin indent on
 set wildmenu
 set wildmode=list:longest,full
 
-let mapleader = "L"
+" gałąź git w linii statusu
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+let mapleader = ","
 
 let completeopt="menuone,longest,preview"
+
+execute pathogen#infect()
 
 """"""""""""""""""""""""""""""""""""""""
 """"" opcje dla PHP
@@ -124,6 +120,7 @@ nnoremap <A-9> 9gt
 " poprzednia / następna zakładka
 nnoremap <A-[> gT
 nnoremap <A-]> gt
+nnoremap <A-'> <Esc>:q<CR>
 
 """"""""""""""""""""""""""""""""""""""""
 """"" mapowania PHP
@@ -140,7 +137,7 @@ noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>kf(a
 vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>kf(a
 " otaczanie blokiem try..catch
 noremap  <Leader>it :call SetTryCatchBlock(line('.'), line('.'))<CR>j0f(a
-vnoremap  <Leader>it :<C-U>call SetTryCatchBlock(line("."), line("'>"))<CR>/^\s*catch<CR>0f(a
+vnoremap  <Leader>it :<C-U>call SetTryCatchBlock(line("."), line("'>"))<CR>/}\s*catch<CR>0f(a
 " otaczanie komentarzem
 noremap  <Leader>io :call SetComment(line('.'), line('.'))<CR>
 vnoremap  <Leader>io :<C-U>call SetComment(line("."), line("'>"))<CR>
@@ -200,8 +197,10 @@ inoremap <expr> "  strpart(getline('.'), col('.')-1, 1) == '"' ? "\<Right>" : '"
 inoremap <expr> '  strpart(getline('.'), col('.')-1, 1) == "'" ? "\<Right>" : "''<Left>"
 inoremap <expr> `  strpart(getline('.'), col('.')-1, 1) == "`" ? "\<Right>" : "``<Left>"
 
-" wywołanie skryptu formatującego kod
-noremap <F2> <ESC>:source ~/.vim/checkstyle<CR><CR>
+" wywołanie skryptu formatującego kod - niepraktyczne, zmieniam na tworzenie
+" akcesorów
+" noremap <F2> <ESC>:source ~/.vim/checkstyle<CR><CR>
+noremap <F2> <ESC>:call MakeSetterAndGetter(expand("<cword>"))<CR>
 
 " otwiera odnośnik do słowa pod kursorem w nowej karcie
 noremap <F3> <ESC>:call OpenTagInNewTab(expand("<cword>"))<CR>
@@ -254,6 +253,16 @@ augroup filetype_vim
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
 
+augroup filetype_xt
+    au BufNewFile,BufRead *.xt  setf xt
+augroup END
+
+""""""""""""""""""""""""""""""""""""""""
+""""" DBGPavim
+""""""""""""""""""""""""""""""""""""""""
+let g:dbgPavimPort = 9000
+let g:dbgPavimBreakAtEntry = 0
+
 """"""""""""""""""""""""""""""""""""""""
 """"" skróty
 """"""""""""""""""""""""""""""""""""""""
@@ -277,10 +286,11 @@ iab rf return false;
 iab t> $this-
 iab tne throw new Exception("");<ESC>3h
 iab pf public function
+iab vf private function
 "iab tf protected function ()<CR>{<CR>}<ESC>2k2e
 iab psf public static function
 "iab PS PDO::PARAM_STR
 "iab PI PDO::PARAM_INT
 iab tt <table><CR><thead><CR><tr><CR><th></th><CR></tr><CR></thead><CR><tbody><CR><tr><CR><td></td><CR></tr><CR></tbody><CR></table>
 iab pp <?php  ?><ESC>2h
-iab aa array()<ESC>h
+iab cl console.log()<ESC>ha
