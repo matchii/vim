@@ -65,7 +65,7 @@ let g:funcs = {
 \ 'appenditerator': { 'info': "\n", 'word': 'appenditerator', 'kind': 'bi' },
 \ 'array': { 'info': "array array ([ mixed $... ] )\nCreates an array.", 'word': 'array', 'kind': 'bi' },
 \ 'array_change_key_case': { 'info': "\n", 'word': 'array_change_key_case', 'kind': 'bi' },
-\ 'array_chunk': { 'info': "\n", 'word': 'array_chunk', 'kind': 'bi' },
+\ 'array_chunk': { 'info': "array array_chunk ( array $array , int $size [, bool $preserve_keys = false ] )\nChunks an array into arrays with size elements. The last chunk may contain less than size elements.", 'word': 'array_chunk', 'kind': 'bi' },
 \ 'array_column': { 'info': "\n", 'word': 'array_column', 'kind': 'bi' },
 \ 'array_combine': { 'info': "\n", 'word': 'array_combine', 'kind': 'bi' },
 \ 'array_count_values': { 'info': "\n", 'word': 'array_count_values', 'kind': 'bi' },

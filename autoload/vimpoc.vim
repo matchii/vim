@@ -217,6 +217,7 @@ function! vimpoc#SetClassInheritanceTree(className)
 endfunction
 
 " zwraca tablicę metod klasy, wyekstrachowaną z pliku tagów
+" GetClassMethods(className, type) {{{
 function! vimpoc#GetClassMethods(className, type)
     let methods = []
     if a:className == ''
@@ -259,7 +260,9 @@ function! vimpoc#GetClassMethods(className, type)
     endfor
     return methods
 endfunction
+" }}}
 
+" GetSearchPattern(className, class, class_location, type, resourceType) {{{
 function! vimpoc#GetSearchPattern(className, class, class_location, type, resourceType)
     if a:type == 'all'
         let static = ''
@@ -281,8 +284,10 @@ function! vimpoc#GetSearchPattern(className, class, class_location, type, resour
     let pattern = 'silent! vimgrep /^'.b:base.'.*\t'.a:class_location.access.static.'.*\t'.a:resourceType.'/j '.g:fnames
     return pattern
 endfunction
+" }}}
 
 " zwraca tablicę pól klasy, wyekstrachowaną z pliku tagów
+" GetClassFields(className, type) {{{
 function! vimpoc#GetClassFields(className, type)
 	let fields = []
     if a:className == ''
@@ -314,8 +319,9 @@ function! vimpoc#GetClassFields(className, type)
 	endfor
 	return fields
 endfunction
+" }}}
 
-" zwraca tablicę stałych klasy, wyekstrachowaną z pliku tagów
+" GetClassConstants(className) zwraca tablicę stałych klasy, wyekstrachowaną z pliku tagów {{{
 function! vimpoc#GetClassConstants(className)
 	let constants = []
     if a:className == ''
@@ -341,7 +347,9 @@ function! vimpoc#GetClassConstants(className)
 	endfor
 	return constants
 endfunction
+" }}}
 
+" GetParentClassList(className) {{{
 function! vimpoc#GetParentClassList(className)
 	let b:parentClasses = []
     if a:className == ''
@@ -356,7 +364,9 @@ function! vimpoc#GetParentClassList(className)
 	endwhile
 	return b:parentClasses
 endfunction
+" }}}
 
+" GetParentClass(class) {{{
 function! vimpoc#GetParentClass(class)
 	let parentClass = ''
 	if a:class != ''
@@ -370,7 +380,9 @@ function! vimpoc#GetParentClass(class)
 	endif
     return parentClass
 endfunction
+" }}}
 
+" IsClassKnown(class) {{{
 function! vimpoc#IsClassKnown(class)
     exe 'silent! vimgrep /^\s*class\s\+'.a:class.'\>'.g:fnames
     let b:known_qflist = getqflist()
@@ -380,13 +392,18 @@ function! vimpoc#IsClassKnown(class)
         return 0
     endif
 endfunction
+" }}}
 
+" GetBuiltInFunctions(prefix) {{{
 function! vimpoc#GetBuiltInFunctions(prefix)
     return values(filter(copy(g:funcs), 'v:key =~ "^'.a:prefix.'"'))
 endfunction
+" }}}
 
+" Debug(text) {{{
 function! vimpoc#Debug(text)
     echom 'vimpoc: ' . a:text
 endfunction
+" }}}
 
 source ~/.vim/autoload/funcs.vim

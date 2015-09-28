@@ -86,10 +86,11 @@ function! MakeSetter(variable)
 	let indent = "    "
 	let l = line('.')
 	let text = [
-		\ '',
+		\ "",
 		\ indent."public function set".uvar."($".cvar.")",
 		\ indent."{",
 		\ indent.indent."$this->".var." = $".cvar.";",
+		\ "",
 		\ indent.indent."return $this;",
 		\ indent."}",
 	\ ]
@@ -104,8 +105,7 @@ function! MakeClass()
 		\ '',
 		\ "class " . matchstr(@%, '\zs[a-zA-Z_]\+\ze\.'),
 		\ "{",
-		\ "}",
-	\ ]
+		\ "}"]
 	call append(0, text)
 endfunction
 " }}}
@@ -157,7 +157,7 @@ function! SetProject()
         execute 'source .project.vim'
     else
         let g:unit_test_bootstrap = 'test/bootstrap/unit.php'
-        let g:ctags_exclude = '--exclude=lib/tag_links/symfony/lib/plugins'
+        let g:ctags_exclude = '--exclude=vendor'
     endif
 endfunction
 " }}}
@@ -226,7 +226,7 @@ endfunction
 
 " RunMessDetection wykrywa bałagan w aktualnym pliku {{{
 function! RunMessDetection()
-    execute '!phpmd ' . @% . ' text codesize,design,unusedcode'
+    execute '!phpmd ' . @% . ' text design,unusedcode'
 endfunction
 " }}}
 
