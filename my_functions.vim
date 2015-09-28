@@ -224,12 +224,6 @@ function! RunTestForThisClass()
 endfunction
 " }}}
 
-" RunMessDetection wykrywa bałagan w aktualnym pliku {{{
-function! RunMessDetection()
-    execute '!phpmd ' . @% . ' text design,unusedcode'
-endfunction
-" }}}
-
 " GrepOperator {{{
 function! s:GrepOperator(type)
     let saved_unnamed_register = @@

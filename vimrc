@@ -161,8 +161,6 @@ noremap <Leader>ua :call RunUnitTests()<CR>
 " dla tego pliku; jeśli to jest plik *Test.php, to go wykonuje, inaczej szuka
 " takiego pliku na podstawie nazwy obecnego
 noremap <Leader>ui :call RunThisUnitTest()<CR>
-" przepuszcza plik przez PHPMD
-noremap <Leader>md :call RunMessDetection()<CR>
 
 noremap <Leader>fsp :call SetProject()<CR>
 noremap <Leader>bt :call BuildTags()<CR><CR>
