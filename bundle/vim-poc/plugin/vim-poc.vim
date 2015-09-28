@@ -5,6 +5,7 @@
 " Menu items {{{"
 menu 100.300 PHP.Mess\ Detector<Tab><Leader>md  :call RunMessDetection()<CR>
 menu 100.400 PHP.Code\ Sniffer                  :call RunCodeSniff()<CR>
+menu 100.400 PHP.Code\ Duplication              :call RunDuplicationDetect()<CR>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -38,6 +39,17 @@ function! RunCodeSniff()
     let l:file = 'smell_in_' . expand('%:t')
     execute 'redir! > /tmp/' . l:file
     execute 'silent !phpcs --standard=PSR2 ' . @%
+    execute 'redir END'
+    execute 'split'
+    execute 'e /tmp/' . l:file
+endfunction
+" }}}
+
+" RunDuplicationDetect {{{
+function! RunDuplicationDetect()
+    let l:file = 'dupes_in_' . expand('%:t')
+    execute 'redir! > /tmp/' . l:file
+    execute 'silent !phpcpd ' . @%
     execute 'redir END'
     execute 'split'
     execute 'e /tmp/' . l:file
