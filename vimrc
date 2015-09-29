@@ -150,8 +150,6 @@ noremap <Leader>mt :call MakeTestMethod(expand("<cword>"))<CR>k
 noremap <Leader>k :let b:defaultClass = expand("<cword>")<CR>
 vnoremap <Leader>k :<C-U>let b:defaultClass = getline(".")[col("'<")-1:col("'>")-1]<CR>
 
-noremap <Leader>mm :execute 'make %'<CR>
-
 " tworzy szablon klasy na podstawie nazwy pliku
 noremap <Leader>mc :execute MakeClass()<CR>
 

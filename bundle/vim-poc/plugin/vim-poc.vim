@@ -1,23 +1,32 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""""" Menu
+""""" MENU
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Menu items {{{"
-menu 100.300 PHP.Mess\ Detector<Tab><Leader>md  :call RunMessDetection()<CR>
-menu 100.400 PHP.Code\ Sniffer                  :call RunCodeSniff()<CR>
-menu 100.400 PHP.Code\ Duplication              :call RunDuplicationDetect()<CR>
+menu 100.200 PHP.Check\ Syntax<Tab><Leader>mm     :call RunSyntaxCheck()<CR>
+menu 100.300 PHP.Mess\ Detector<Tab><Leader>md    :call RunMessDetection()<CR>
+menu 100.400 PHP.Code\ Sniffer<Tab><Leader>mf     :call RunCodeSniff()<CR>
+menu 100.400 PHP.Code\ Duplication<Tab><Leader>mp :call RunCopyPasteDetection()<CR>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""""" Shortcuts
+""""" SHORTCUTS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Runs PHP Mess Detector on current file
+" Runs PHP syntax check on the current file or directory.
+noremap <Leader>mm :execute 'make %'<CR>
+" Runs PHP Mess Detector on the current file or directory.
 " See http://phpmd.org
 noremap <Leader>md :call RunMessDetection()<CR>
+" Runs PHP Code Sniffer on the current file or directory.
+" See https://github.com/squizlabs/PHP_CodeSniffer
+noremap <Leader>mf :call RunCodeSniff()<CR>
+" Runs PHP Copy/Paste Detector on the current file or directory.
+" See https://github.com/sebastianbergmann/phpcpd
+noremap <Leader>mp :call RunCopyPasteDetection()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""""" Functions
+""""" FUNCTIONS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " RunMessDetection {{{
@@ -45,8 +54,8 @@ function! RunCodeSniff()
 endfunction
 " }}}
 
-" RunDuplicationDetect {{{
-function! RunDuplicationDetect()
+" RunCopyPasteDetection {{{
+function! RunCopyPasteDetection()
     let l:file = 'dupes_in_' . expand('%:t')
     execute 'redir! > /tmp/' . l:file
     execute 'silent !phpcpd ' . @%
