@@ -6,7 +6,8 @@
 menu 100.200 PHP.Check\ Syntax<Tab><Leader>mm     :call RunSyntaxCheck()<CR>
 menu 100.300 PHP.Mess\ Detector<Tab><Leader>md    :call RunMessDetection()<CR>
 menu 100.400 PHP.Code\ Sniffer<Tab><Leader>mf     :call RunCodeSniff()<CR>
-menu 100.400 PHP.Code\ Duplication<Tab><Leader>mp :call RunCopyPasteDetection()<CR>
+menu 100.500 PHP.Code\ Duplication<Tab><Leader>mp :call RunCopyPasteDetection()<CR>
+menu 100.600 PHP.Find\ occurences<Tab><Leader>ff  :call FindOccurences(expand('<cword>'))<CR>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -24,6 +25,7 @@ noremap <Leader>mf :call RunCodeSniff()<CR>
 " Runs PHP Copy/Paste Detector on the current file or directory.
 " See https://github.com/sebastianbergmann/phpcpd
 noremap <Leader>mp :call RunCopyPasteDetection()<CR>
+noremap <Leader>ff :call FindOccurences(expand('<cword>'))<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"" FUNCTIONS
@@ -65,3 +67,21 @@ function! RunCopyPasteDetection()
 endfunction
 " }}}
 
+" FindOccurences {{{
+function! FindOccurences(string)
+    " TODO search visually-marked text
+    let l:file = a:string.'.occur'
+    execute 'redir! > /tmp/' . l:file
+    execute 'silent !szukaj "' . a:string . '"'
+    execute 'redir END'
+    execute 'split'
+    execute 'e /tmp/' . l:file
+    execute 'silent %s/:\s\+/:/'
+
+    execute 'syn clear'
+    execute 'hi searched   gui=bold guifg=#FD4F6A'
+    execute 'hi linenumber gui=none guifg=green'
+    execute 'syn match   searched   "' . a:string . '"'
+    execute 'syn match   linenumber ":\d\+:"'
+endfunction
+" }}}
