@@ -3,11 +3,12 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Menu items {{{"
-menu 100.200 PHP.Check\ Syntax<Tab><Leader>mm     :call RunSyntaxCheck()<CR>
-menu 100.300 PHP.Mess\ Detector<Tab><Leader>md    :call RunMessDetection()<CR>
-menu 100.400 PHP.Code\ Sniffer<Tab><Leader>mf     :call RunCodeSniff()<CR>
-menu 100.500 PHP.Code\ Duplication<Tab><Leader>mp :call RunCopyPasteDetection()<CR>
-menu 100.600 PHP.Find\ occurences<Tab><Leader>ff  :call FindOccurences(expand('<cword>'))<CR>
+noremenu 100.200 PHP.Check\ Syntax<Tab><Leader>mm     :call RunSyntaxCheck()<CR>
+noremenu 100.300 PHP.Mess\ Detector<Tab><Leader>md    :call RunMessDetection()<CR>
+noremenu 100.400 PHP.Code\ Sniffer<Tab><Leader>mf     :call RunCodeSniff()<CR>
+noremenu 100.500 PHP.Code\ Duplication<Tab><Leader>mp :call RunCopyPasteDetection()<CR>
+nnoremenu 100.600 PHP.Find\ occurences<Tab><Leader>ff :call FindOccurences(expand('<cword>'))<CR>
+vnoremenu 100.650 PHP.Find\ occurences<Tab><Leader>ff :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<CR>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -25,7 +26,10 @@ noremap <Leader>mf :call RunCodeSniff()<CR>
 " Runs PHP Copy/Paste Detector on the current file or directory.
 " See https://github.com/sebastianbergmann/phpcpd
 noremap <Leader>mp :call RunCopyPasteDetection()<CR>
-noremap <Leader>ff :call FindOccurences(expand('<cword>'))<CR>
+" Shows occurences of word under cursor
+nnoremap <Leader>ff :call FindOccurences(expand('<cword>'))<CR>
+" Shows occurences of visually selected text
+vnoremap <Leader>ff :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"" FUNCTIONS
@@ -69,14 +73,14 @@ endfunction
 
 " FindOccurences {{{
 function! FindOccurences(string)
-    " TODO search visually-marked text
-    let l:file = a:string.'.occur'
+    let l:file = substitute(a:string, '\s\+', '_', 'g')[0:64].'.occur'
     execute 'redir! > /tmp/' . l:file
     execute 'silent !szukaj "' . a:string . '"'
     execute 'redir END'
     execute 'split'
     execute 'e /tmp/' . l:file
     execute 'silent %s/:\s\+/:/'
+    execute 'w'
 
     execute 'syn clear'
     execute 'hi searched   gui=bold guifg=#FD4F6A'
