@@ -51,9 +51,9 @@ endfunction
 
 " RunCodeSniff {{{
 function! RunCodeSniff()
-    let l:file = 'smell_in_' . expand('%:t')
+    let l:file = 'smell_in_' . expand('%:t') . '.sniff'
     execute 'redir! > /tmp/' . l:file
-    execute 'silent !phpcs --standard=PSR2 ' . @%
+    execute 'silent !phpcs --standard=PSR2 --report-width=120 ' . @%
     execute 'redir END'
     execute 'split'
     execute 'e /tmp/' . l:file
