@@ -16,7 +16,7 @@ let colors_name = "wombat"
 if version >= 700
   hi CursorLine guibg=#2d2d2d
   hi CursorColumn guibg=#2d2d2d
-  hi MatchParen guifg=#f6f3e8 guibg=#857b6f gui=bold
+  hi MatchParen guifg=#fba602 guibg=NONE    gui=bold
   hi Pmenu 		guifg=#f6f3e8 guibg=#444444
   hi PmenuSel 	guifg=#000000 guibg=#cae682
 endif
@@ -35,10 +35,10 @@ hi Visual		guifg=#f6f3e8 guibg=#444444 gui=none
 hi SpecialKey	guifg=#343434 guibg=#242424 gui=none
 
 " Syntax highlighting
-hi Comment 		guifg=#99968b gui=italic
+hi Comment 		guifg=#99968b gui=none
 hi Todo 		guifg=#8f8f8f gui=italic
 hi Constant 	guifg=#e5786d gui=none
-hi String 		guifg=#95e454 gui=italic
+hi String 		guifg=#95e454 gui=none
 hi Identifier 	guifg=#cae682 gui=none
 hi Function 	guifg=#cae682 gui=none
 hi Type 		guifg=#cae682 gui=none
