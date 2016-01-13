@@ -84,6 +84,18 @@ augroup php_options
     autocmd Filetype php set errorformat=%m\ in\ %f\ on\ line\ %l
 augroup END
 
+augroup go_options
+    autocmd!
+    " wcięcia tabulatorami
+    autocmd Filetype go set noexpandtab
+    " nie pokazuj tabulatorów
+    autocmd Filetype go set nolist
+    " zwiń funkcje
+    autocmd Filetype go :%g/^func .* {$/ normal! f{zf%
+    " zwiń definicje struktur
+    autocmd Filetype go :%g/^type .* {$/ normal! f{zf%
+augroup END
+
 """"""""""""""""""""""""""""""""""""""""
 """"" własny kod
 """"""""""""""""""""""""""""""""""""""""
