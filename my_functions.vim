@@ -240,3 +240,20 @@ function! s:GrepOperator(type)
     let @@ = saved_unnamed_register
 endfunction
 " }}}
+
+" ColorLog {{{
+function! ColorLog()
+    let keyName = "[a-zA-Z\-_]\+"
+    execute 'syn clear'
+    execute 'syn match key0 "^[a-zA-Z0-9\-_]\+:"'
+    execute 'syn match key1 "^  [a-zA-Z0-9\-_]\+:"'
+    execute 'syn match key2 "^    [a-zA-Z0-9\-_]\+:"'
+    execute 'syn match time "^.* === new call ===$"'
+    execute 'syn match url  "http[s]\?:.*$"'
+    execute 'hi key0 guifg=#DDA0DD'
+    execute 'hi key1 guifg=#63B8FF'
+    execute 'hi key2 guifg=#8DEEEE'
+    execute 'hi time guifg=#FF8247'
+    execute 'hi url  guifg=#9ACD32'
+endfunction
+" }}}"
