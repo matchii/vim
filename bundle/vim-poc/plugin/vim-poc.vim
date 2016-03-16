@@ -37,7 +37,7 @@ vnoremap <Leader>ff :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<
 
 " RunMessDetection {{{
 function! RunMessDetection()
-    let l:file = 'mess_in_' . expand('%:t')
+    let l:file = 'mess_in_' . expand('%:t') . '.mess'
     execute 'redir! > /tmp/' . l:file
     execute 'silent !phpmd ' . @% . ' text design,unusedcode,codesize | sed s/^.*:// -'
     execute 'redir END'
@@ -82,10 +82,6 @@ function! FindOccurences(string)
     execute 'silent %s/:\s\+/:/'
     execute 'w'
 
-    execute 'syn clear'
-    execute 'hi searched   gui=bold guifg=#FD4F6A'
-    execute 'hi linenumber gui=none guifg=green'
     execute 'syn match   searched   "' . a:string . '"'
-    execute 'syn match   linenumber ":\d\+:"'
 endfunction
 " }}}
