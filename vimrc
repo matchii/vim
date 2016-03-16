@@ -266,10 +266,13 @@ augroup filetype_xt
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""
-""""" DBGPavim
+""""" Vdebug
 """"""""""""""""""""""""""""""""""""""""
-let g:dbgPavimPort = 9000
-let g:dbgPavimBreakAtEntry = 0
+if (!exists('g:vdebug_options'))
+    let g:vdebug_options = {}
+endif
+let g:vdebug_options['port'] = 9099
+let g:vdebug_options['path_maps'] = {"/var/www": "/home/maciejwatras/theqar"}
 
 """"""""""""""""""""""""""""""""""""""""
 """"" skróty
