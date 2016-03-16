@@ -153,11 +153,9 @@ endfunction
 
 " SetProject {{{
 function! SetProject()
+    normal! c
     if filereadable('.project.vim')
         execute 'source .project.vim'
-    else
-        let g:unit_test_bootstrap = 'test/bootstrap/unit.php'
-        let g:ctags_exclude = '--exclude=vendor'
     endif
 endfunction
 " }}}
