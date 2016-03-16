@@ -1,3 +1,5 @@
 .swp
 .*.swp
 .netrwhist
+/bundle/*
+!/bundle/vim-poc
