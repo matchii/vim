@@ -35,7 +35,7 @@ syn keyword     goType           int8 int16 int32 int64
 syn keyword     goType           float32 float64
 syn keyword     goType           float32 float64
 syn keyword     goType           byte
-syn keyword     goType           uint int float uintptr string
+syn keyword     goType           uint int float uintptr string bool error
 
 syn keyword     goConcurrent     chan go
 
