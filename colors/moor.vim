@@ -26,14 +26,13 @@ endif " }}}
 
 let s:bwc = {}
 
-" The most basic of all our colors is a slightly tweaked version of the Molokai
 " Normal text. (Change to e834dd - lovely purple.)
-let s:bwc.plain = ['eddfc7', 15] " jasny beżowy
+let s:bwc.plain       = ['eddfc7', 15] " jasny beżowy
 
 " Pure and simple.
-let s:bwc.snow = ['ffffff', 15]  " biały
-let s:bwc.coal = ['000000', 16]  " czarny
-let s:bwc.blood       = ['FF0000', 100] "
+let s:bwc.snow        = ['ffffff', 15]  " biały
+let s:bwc.coal        = ['000000', 16]  " czarny
+let s:bwc.blood       = ['FF0000', 100] " czerwony
 
 " Autumn colors
 let s:bwc.cappuccino  = ['E1BF66', 20]  " tekst w apostrofach
@@ -46,19 +45,19 @@ let s:bwc.violet      = ['e811da', 100] " sparowany nawias
 let s:bwc.moss        = ['80a970', 100] " szarozielony (ale bardziej zielony), statement
 let s:bwc.olive       = ['A09320', 100] " słowa kluczowe
 let s:bwc.lightolive  = ['D6C84A', 100] " typy
-let s:bwc.kitron      = ['ABF387', 100] " jasnozielony, operatory
+let s:bwc.fern        = ['ABF387', 100] " jasnozielony, operatory
 let s:bwc.leaf        = ['A2AF58', 100] " nazwy zmiennych
 let s:bwc.rust        = ['B6726C', 100] " stałe
-let s:bwc.bleak       = ['CC7A4A', 100] "
-let s:bwc.petal       = ['E1A4D0', 100] " szukany tekst
+let s:bwc.petal       = ['E834DD', 100] " szukany tekst
 let s:bwc.rose        = ['ED382D', 100] " usunięta linia w diffie
 let s:bwc.newleaf     = ['66E953', 100] " dodana linia w diffie
+let s:bwc.nightsky    = ['5A00FF', 100] " kursor
+let s:bwc.daysky      = ['00BFFF', 100] " kursor
 
 " All of the Gravel colors are based on a brown from Clouds Midnight.
 let s:bwc.brightgravel   = ['d9cec3', 252]
 let s:bwc.lightgravel    = ['998f84', 245]
 let s:bwc.gravel         = ['857f78', 243]
-let s:bwc.mediumgravel   = ['666462', 241]
 let s:bwc.deepgravel     = ['45413b', 238]
 let s:bwc.deepergravel   = ['35322d', 236]
 let s:bwc.darkgravel     = ['242321', 235]
@@ -186,16 +185,16 @@ call s:HL('MatchParen', 'violet', 'bg', 'bold')
 call s:HL('NonText',    'lightstone', 'bg')
 call s:HL('SpecialKey', 'darkstone', 'bg')
 
-call s:HL('Visual',    'coal',  'snow')
-call s:HL('VisualNOS', 'coal',  'snow')
+call s:HL('Visual',    'daysky',  'coal')
+call s:HL('VisualNOS', 'daysky',  'coal')
 
-call s:HL('Search',    'coal', 'petal', 'none')
-call s:HL('IncSearch', 'coal', 'petal', 'none')
+call s:HL('Search',    'coal', 'petal', 'bold')
+call s:HL('IncSearch', 'coal', 'petal', 'bold')
 
 call s:HL('Underlined', 'fg', '', 'underline')
 
-call s:HL('StatusLine',   'snow', 'bg', 'none')
-call s:HL('StatusLineNC', 'snow', 'bg', 'none')
+call s:HL('StatusLine',   'plain', 'darksoil', 'italic')
+call s:HL('StatusLineNC', 'plain', 'darksoil', 'none')
 
 call s:HL('Directory', 'fg', 'bg', 'none')
 
@@ -223,7 +222,7 @@ call s:HL('FoldColumn', 'plain', 'darksoil')
 " }}}
 " Cursor {{{
 
-call s:HL('Cursor',  'coal', 'snow', 'none')
+call s:HL('Cursor',  'coal', 'daysky', 'none')
 call s:HL('vCursor', 'coal', 'snow', 'none')
 call s:HL('iCursor', 'coal', 'snow', 'none')
 
@@ -231,7 +230,7 @@ call s:HL('iCursor', 'coal', 'snow', 'none')
 " Syntax highlighting {{{
 
 " Start with a simple base.
-call s:HL('Special', 'snow')
+call s:HL('Special', 'plain')
 
 " Comments are slightly brighter than folds, to make 'headers' easier to see.
 call s:HL('Comment',        'stone')
@@ -239,19 +238,19 @@ call s:HL('Todo',           'blood', 'bg', 'none')
 call s:HL('SpecialComment', 'snow', 'bg', 'none')
 
 " Strings are a nice, pale straw color.  Nothing too fancy.
-call s:HL('String', 'cappuccino')
+call s:HL('String', 'fern')
 
 " Control flow stuff is taffy.
 call s:HL('Statement',   'rust', '', 'none')
 call s:HL('Keyword',     'olive', '', 'none')
-call s:HL('Conditional', 'snow', '', 'none')
-call s:HL('Operator',    'kitron', '', 'none')
-call s:HL('Label',       'snow', '', 'none')
-call s:HL('Repeat',      'snow', '', 'none')
+call s:HL('Conditional', 'rust', '', 'none')
+call s:HL('Operator',    'cappuccino', '', 'none')
+call s:HL('Label',       'rust', '', 'none')
+call s:HL('Repeat',      'rust', '', 'none')
 
 " Functions and variable declarations are orange, because plain looks weird.
 call s:HL('Identifier', 'leaf', '', 'none')
-call s:HL('Function',   'bleak', '', 'none')
+call s:HL('Function',   'plain', '', 'none')
 
 " Preprocessor stuff is lime, to make it pop.
 "
