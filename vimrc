@@ -63,7 +63,9 @@ set wildmenu
 set wildmode=list:longest,full
 
 " gałąź git w linii statusu
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+if exists("fugitive#statusline")
+    set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+endif
 
 let mapleader = ","
 
