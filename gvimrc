@@ -2,3 +2,6 @@
 "    " a ja nie wiem gdzie je zmienić :(
 execute 'winpos 344 24'
 set guifont=Ubuntu\ Mono\ 11
+execute 'cd ~/theqar'
+silent e .
+normal gh

@@ -36,7 +36,7 @@ set hlsearch
 " kolorowanie składni
 syntax on
 
-colorscheme wombat
+colorscheme moor
 
 " dolny pasek
 set ruler
@@ -90,10 +90,12 @@ augroup go_options
     autocmd Filetype go set noexpandtab
     " nie pokazuj tabulatorów
     autocmd Filetype go set nolist
+	" usuń wszystkie zwinięcia (zaraz nałożymy je ponownie)
+	autocmd Filetype go :normal! zE
     " zwiń funkcje
-    autocmd Filetype go :%g/^func .* {$/ normal! f{zf%
+    autocmd Filetype go :silent %g/^func .* {$/ normal! f{zf%
     " zwiń definicje struktur
-    autocmd Filetype go :%g/^type .* {$/ normal! f{zf%
+    autocmd Filetype go :silent %g/^type .* {$/ normal! f{zf%
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""
@@ -215,10 +217,10 @@ noremap <F3> <ESC>:call OpenTagInNewTab(expand("<cword>"))<CR>
 vnoremap <F3> <ESC>:call OpenTagInNewTab(getline(".")[col("'<")-1:col("'>")-1])<CR>
 
 " nowa karta z listą plików
-noremap <F4> <ESC>:silent Te<CR>
+noremap <C-n> <ESC>:silent Te<CR>
 
 " wyłącza podświetlanie wyszukiwania
-noremap <F5> :nohlsearch<CR>
+noremap <C-h> :nohlsearch<CR>
 
 " nowy pusty bufor
 noremap <F6> :enew<CR>
