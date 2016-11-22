@@ -104,8 +104,6 @@ augroup END
 """"" własny kod
 """"""""""""""""""""""""""""""""""""""""
 
-source ~/.vim/my_functions.vim
-
 augroup vimpoc
     autocmd!
     autocmd FileType php :set omnifunc=vimpoc#CompletePHP
@@ -148,9 +146,6 @@ augroup php
 augroup END
 
 
-" otaczanie blokiem if
-noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>kf(a
-vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>kf(a
 " otaczanie blokiem try..catch
 noremap  <Leader>it :call SetTryCatchBlock(line('.'), line('.'))<CR>j0f(a
 vnoremap  <Leader>it :<C-U>call SetTryCatchBlock(line("."), line("'>"))<CR>/}\s*catch<CR>0f(a
