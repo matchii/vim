@@ -155,7 +155,6 @@ vnoremap  <Leader>io :<C-U>call SetComment(line("."), line("'>"))<CR>
 noremap <Leader>msg :call MakeSetterAndGetter(expand("<cword>"))<CR>
 noremap <Leader>ms :call MakeSetter(expand("<cword>"))<CR>
 noremap <Leader>mg :call MakeGetter(expand("<cword>"))<CR>
-noremap <Leader>mf :call MakeMethod(expand("<cword>"))<CR>
 noremap <Leader>mt :call MakeTestMethod(expand("<cword>"))<CR>k
 " ustawianie słowa pod kursorem jako domyślnej klasy do omni
 noremap <Leader>k :let b:defaultClass = expand("<cword>")<CR>
