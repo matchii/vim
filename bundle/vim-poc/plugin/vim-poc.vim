@@ -238,8 +238,17 @@ endfunction
 
 " OpenTagInNewTab {{{
 function! OpenTagInNewTab(tag)
+    let l:tag = substitute(a:tag, "/", "_", "g")
     execute "Te"
-    execute "tjump ".a:tag
+    execute "tjump ".l:tag
+endfunction
+" }}}
+
+" OpenFileInNewTab {{{
+function! OpenFileInNewTab(filepath)
+    let l:filepath = substitute(a:filepath, "\r", "", "g")
+    execute "Te"
+    execute "e ".l:filepath
 endfunction
 " }}}
 

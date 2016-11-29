@@ -213,6 +213,12 @@ noremap <F2> <ESC>:call MakeSetterAndGetter(expand("<cword>"))<CR>
 noremap <F3> <ESC>:call OpenTagInNewTab(expand("<cword>"))<CR>
 vnoremap <F3> <ESC>:call OpenTagInNewTab(getline(".")[col("'<")-1:col("'>")-1])<CR>
 
+" otwiera w nowej karcie plik pod kursorem
+" działa jeśli ścieżka zaczyna się na początku linii i kończy drukropkiem -
+" czyli jak w pliku .occur (patrz PHP -> Find occurences)
+noremap <F4> <ESC>:call OpenFileInNewTab(getline(".")[0:searchpos(":", 'n')[1]-2])<CR>
+vnoremap <F4> <ESC>:call OpenFileInNewTab(getline(".")[col("'<")-1:col("'>")-1])<CR>
+
 " nowa karta z listą plików
 noremap <C-n> <ESC>:silent Te<CR>
 
