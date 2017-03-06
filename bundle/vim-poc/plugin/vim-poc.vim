@@ -264,14 +264,15 @@ endfunction
 
 " MakeMethod {{{
 function! MakeMethod(name)
-    execute ':d'
     let indent = "    "
     let text = [
+                \ '',
                 \ indent . 'public function ' . a:name . '()',
                 \ indent . '{',
                 \ indent . '}',
                 \ ]
-    call append(line('.')-1, text)
+    call append(searchpair('{', '', '}', 'Wnr')-1, text)
+    normal G2k
 endfunction
 " }}}
 
