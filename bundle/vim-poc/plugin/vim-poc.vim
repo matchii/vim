@@ -33,6 +33,8 @@ vnoremap <Leader>ff :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<
 " Creates condition block
 noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>k0f(a
 vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>k0f(a
+" Extracts selected code to new method
+vnoremap  <Leader>ext :<C-U>call ExtractToNewFunction(line("."), line("'>"))<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"" FUNCTIONS
@@ -142,6 +144,53 @@ function! SetComment(first_line, last_line)
         let cur_line -= 1
     endwhile
     call append(prev_line, '/*')
+endfunction
+" }}}
+
+" ExtractToNewFunction {{{
+" Wycina kod pomiędzy podanymi liniami (włącznie) i umieszcza go w nowej
+" funkcji
+" TODO zmienne stworzone przed wyciętym kodem powinny być parametrami nowej
+" metody
+function! ExtractToNewFunction(first_line, last_line)
+    if a:first_line > a:last_line
+        return
+    endif
+    let diff = a:last_line - a:first_line
+    " wcięcie pierwszego wiersza przenoszonego tekstu
+    let old_indent = matchstr(getline(a:first_line), '^\zs\s*\ze')
+    " pozwalamy użytkownikowi podać nową nazwę
+    call inputsave()
+    let inputMethodName = input('Method name: ')
+    call inputrestore()
+    " jeśli nie podał, generujemy automatycznie
+    if inputMethodName != ''
+        let methodName = inputMethodName
+    else
+        let methodName = 'rows_from_'.a:first_line.'_to_'.a:last_line
+    endif
+    " ustawiamy wcięcie na szerokość dwóch tabulatorów
+    let cur_line_number = a:first_line
+    for line in getline(a:first_line, a:last_line)
+        call setline(cur_line_number, substitute(line, "^".old_indent, "        ", ''))
+        let cur_line_number = cur_line_number + 1
+    endfor
+    " wycinamy linie...
+    execute "silent! normal ".a:first_line."Gd".l:diff."j"
+    " ... i zastępujemy je wywołaniem nowej metody
+    call append(a:first_line-1, old_indent.'$this->'.methodName.'();')
+
+    " wstawiamy deklarację metody...
+    let indent = "    "
+    let text = [
+                \ '',
+                \ indent . 'private function '.methodName.'()',
+                \ indent . '{',
+                \ indent . '}',
+                \ ]
+    call append(search('^    }$'), text)
+    " ... i wklejamy tekst do jej wnętrza
+    execute "silent! normal 3jp2k0f(b"
 endfunction
 " }}}
 
