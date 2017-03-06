@@ -252,6 +252,17 @@ function! OpenFileInNewTab(filepath)
 endfunction
 " }}}
 
+" JumpToOccurence {{{
+function! JumpToOccurence(line)
+    let l:path = a:line[0:searchpos(":")[1]-2]
+    let l:number = a:line[len(l:path)+1:searchpos(":", 'n')[1]-2]
+    let l:filepath = substitute(l:path, "\r", "", "g")
+    execute "Te"
+    execute "e ".l:filepath
+    execute "silent! normal ".l:number."Gzozz"
+endfunction
+" }}}
+
 " SetProject {{{
 function! SetProject()
     normal! c

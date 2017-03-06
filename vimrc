@@ -215,7 +215,7 @@ vnoremap <F3> <ESC>:call OpenTagInNewTab(getline(".")[col("'<")-1:col("'>")-1])<
 " otwiera w nowej karcie plik pod kursorem
 " działa jeśli ścieżka zaczyna się na początku linii i kończy drukropkiem -
 " czyli jak w pliku .occur (patrz PHP -> Find occurences)
-noremap <F4> <ESC>:call OpenFileInNewTab(getline(".")[0:searchpos(":", 'n')[1]-2])<CR>
+noremap <F4> <ESC>:call JumpToOccurence(getline("."))<CR>
 vnoremap <F4> <ESC>:call OpenFileInNewTab(getline(".")[col("'<")-1:col("'>")-1])<CR>
 
 " nowa karta z listą plików
