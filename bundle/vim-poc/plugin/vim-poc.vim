@@ -3,6 +3,9 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Menu items {{{"
+noremenu 100.100 PHP.Make\ Method<Tab><Leader>mh      :call MakeMethod(expand('<cword>'))<CR>
+noremenu 100.150 PHP.Break\ Array<Tab><Leader>ba      :call BreakArray(line('.'))<CR>
+noremenu 100.170 PHP.Break\ Params<Tab><Leader>bp     :call BreakParams(line('.'))<CR>
 noremenu 100.200 PHP.Check\ Syntax<Tab><Leader>mm     :call RunSyntaxCheck()<CR>
 noremenu 100.300 PHP.Mess\ Detector<Tab><Leader>md    :call RunMessDetection()<CR>
 noremenu 100.400 PHP.Code\ Sniffer<Tab><Leader>mf     :call RunCodeSniff()<CR>
@@ -15,6 +18,9 @@ vnoremenu 100.650 PHP.Find\ occurences<Tab><Leader>ff :call FindOccurences(getli
 """"" SHORTCUTS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" List of shortcuts {{{
+" Creates method using word under cursor as a name
+noremap <Leader>mh :call MakeMethod(expand('<cword>'))<CR>
 " Runs PHP syntax check on the current file or directory.
 noremap <Leader>mm :execute 'make %'<CR>
 " Runs PHP Mess Detector on the current file or directory.
@@ -35,6 +41,11 @@ noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>k0f(a
 vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>k0f(a
 " Extracts selected code to new method
 vnoremap  <Leader>ext :<C-U>call ExtractToNewFunction(line("."), line("'>"))<CR>
+" Breaks array defined in one line
+nnoremap <Leader>ba :call BreakArray(line('.'))<CR>
+" Breaks function parameters defined in one line
+nnoremap <Leader>bp :call BreakParams(line('.'))<CR>
+" }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"" FUNCTIONS
@@ -85,7 +96,7 @@ function! FindOccurences(string)
     execute 'redir END'
     execute 'split'
     execute 'e /tmp/' . l:file
-    execute 'silent %s/:\s\+/:/'
+    execute 'silent! %s/:\s\+/:/'
     execute 'w'
 
     execute 'syn match   searched   "' . a:string . '"'
@@ -416,3 +427,40 @@ function! ColorLog()
     execute 'hi url  guifg=#9ACD32'
 endfunction
 " }}}"
+
+" BreakArray(line_number) {{{
+function! BreakArray(line_number)
+    let this_line = getline(a:line_number)
+    let indent = matchstr(this_line, '^\zs\s*\ze')
+    let new_indent = indent.'    '
+    let inside = matchstr(this_line, '\[\zs.*\ze]')
+    let tokens = split(inside, ',')
+    execute "normal! 0f[lci[\n"
+    for token in tokens
+        call append(line('.')-1, new_indent.substitute(token, '^\s\+', '', '').',')
+    endfor
+endfunction
+" }}}
+
+" BreakParams(line_number) {{{
+function! BreakParams(line_number)
+    let this_line = getline(a:line_number)
+    let indent = matchstr(this_line, '^\zs\s*\ze')
+    let new_indent = indent.'    '
+    let inside = matchstr(this_line, '(\zs.*\ze)')
+    let tokens = split(inside, ',')
+    execute "normal! 0f(lci(\n"
+    let idx = 1
+    let tokens_count = len(tokens)
+    for token in tokens
+        let line_to_append = new_indent.substitute(token, '^\s\+', '', '')
+        if idx == tokens_count
+            let separator = ''
+        else
+            let separator = ','
+        endif
+        call append(line('.')-1, line_to_append.separator)
+        let idx = idx + 1
+    endfor
+endfunction
+" }}}
