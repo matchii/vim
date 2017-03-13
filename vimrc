@@ -189,7 +189,6 @@ nnoremap <Leader>ip :call PhpDocSingle()<CR>
 vnoremap <Leader>ip :call Ph(pRa)nge()<CR>
 
 
-inoremap <? <? ?><Left><Left><Left>
 inoremap {% {%  %}<Left><Left><Left>
 inoremap {# {#  #}<Left><Left><Left>
 inoremap {{ {{  }}<Left><Left><Left>
@@ -282,30 +281,19 @@ let g:vdebug_options['path_maps'] = {"/var/www": "/home/maciejwatras/theqar"}
 """"" skróty
 """"""""""""""""""""""""""""""""""""""""
 
-"iab ii if () {<CR>}<ESC>k3l
-"iab ee else<CR>{<CR>}<ESC>k
-"iab ie if () {<CR>} else {<CR>}<ESC>2k3l
-"iab fe foreach ()<Esc>a
-"iab bb {<CR>}<Esc>k
+iab ii if () <C-V>{<CR>}<ESC>kf(
+iab fe foreach () <C-V>{<CR>}<ESC>kf(
 iab vd var_dump($);<ESC>2h
 iab vi var_dump($);die;<ESC>6h
-"iab qp $query = Connection::getConnection()->prepare
-"iab qb $query->bindValue
-"iab rq $result = $query->fetch
-"iab qe $query->execute();
-"iab qq $query->closeCursor();
 iab rr return $result;
 iab rs return $this;
 iab rt return true;
 iab rf return false;
 iab t> $this-
 iab tne throw new Exception("");<ESC>3h
-iab pf public function
-iab vf private function
-"iab tf protected function ()<CR>{<CR>}<ESC>2k2e
+iab pf public function()<CR><C-V>{<CR>}<ESC>2k2ea
+iab vf private function()<CR><C-V>{<CR>}<ESC>2k2ea
 iab psf public static function
-"iab PS PDO::PARAM_STR
-"iab PI PDO::PARAM_INT
 iab tt <table><CR><thead><CR><tr><CR><th></th><CR></tr><CR></thead><CR><tbody><CR><tr><CR><td></td><CR></tr><CR></tbody><CR></table>
 iab pp <?php  ?><ESC>2h
 iab cl console.log()<ESC>ha
