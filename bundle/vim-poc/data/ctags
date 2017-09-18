@@ -1,0 +1,11 @@
+--recurse=yes
+--exclude=.git
+--exclude=composer.phar
+--fields=+aimS
+--languages=php
+--PHP-kinds=+cfi-v
+--tag-relative=yes
+--regex-PHP=/abstract class ([^ ]*)/\1/c/
+--regex-PHP=/^[ \t]*trait ([^ ]*)/\1/c/
+--regex-PHP=/(public |static |abstract |protected |private )+ function +([^ \(]*)/\2/f/
+--regex-PHP=/^[ \t]*const[ ]+([^ ]*)/\1/n/
