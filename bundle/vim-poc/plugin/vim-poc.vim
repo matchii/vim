@@ -39,6 +39,9 @@ vnoremap <Leader>ff :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<
 " Creates condition block
 noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>k0f(a
 vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>k0f(a
+" Creates foreach block
+noremap  <Leader>fe :call SetForeachBlock(line('.'), line('.'))<CR>k0f(a
+vnoremap  <Leader>fe :<C-U>call SetForeachBlock(line("."), line("'>"))<CR>k0f(a
 " Extracts selected code to new method
 vnoremap  <Leader>ext :<C-U>call ExtractToNewFunction(line("."), line("'>"))<CR>
 " Breaks array defined in one line
@@ -118,6 +121,24 @@ function! SetIfBlock(first_line, last_line)
         let cur_line -= 1
     endwhile
     call append(prev_line, indent."if () {")
+endfunction
+" }}}
+
+" SetForeachBlock obejmuje fragment pomiędzy liniami blokiem if i zwiększa wcięcie o 1 poziom {{{
+function! SetForeachBlock(first_line, last_line)
+    if a:first_line > a:last_line
+        return
+    endif
+    let prev_line = a:first_line - 1
+    let indent = matchstr(getline(a:first_line), '^\zs\s*\ze')
+
+    call append(a:last_line, indent."}")
+    let cur_line = a:last_line
+    while cur_line >= a:first_line
+        call setline(cur_line, substitute(getline(cur_line), "^", "    ", ''))
+        let cur_line -= 1
+    endwhile
+    call append(prev_line, indent."foreach () {")
 endfunction
 " }}}
 
