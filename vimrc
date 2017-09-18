@@ -1,6 +1,6 @@
 " If host specific configuration is needed, create unversioned file config.vim
-if filereadable('config.vim')
-    runtime config.vim
+if filereadable(expand($HOME."/.vim/config.vim"))
+    source ~/.vim/config.vim
 endif
 
 """"""""""""""""""""""""""""""""""""""""
