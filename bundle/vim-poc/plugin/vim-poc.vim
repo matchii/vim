@@ -3,6 +3,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Menu items {{{"
+noremenu 100.130 PHP.Extract\ Code<Tab><Leader>ext    :call ExtractToNewFunction(line("."), line("'>"))<CR>
 noremenu 100.150 PHP.Break\ Array<Tab><Leader>ba      :call BreakArray(line('.'))<CR>
 noremenu 100.170 PHP.Break\ Params<Tab><Leader>bp     :call BreakParams(line('.'))<CR>
 noremenu 100.180 PHP.Enrow\ Arrows<Tab><Leader>ea     :call EnrowArrows(line("'<"), line("'>"))<CR>
@@ -273,6 +274,9 @@ function! MakeClass()
     let text = [
         \ '<?php',
         \ '',
+        \ '/**',
+        \ ' * TODO Write here a few words about what this class is supposed to do.',
+        \ ' */',
         \ "class " . matchstr(@%, '\zs[a-zA-Z_]\+\ze\.'),
         \ "{",
         \ "}"]
