@@ -1,3 +1,8 @@
+" If host specific configuration is needed, create unversioned file config.vim
+if filereadable('config.vim')
+    runtime config.vim
+endif
+
 """"""""""""""""""""""""""""""""""""""""
 """"" opcje ogólne
 """"""""""""""""""""""""""""""""""""""""
@@ -61,11 +66,6 @@ filetype plugin indent on
 
 set wildmenu
 set wildmode=list:longest,full
-
-" gałąź git w linii statusu
-if exists("fugitive#statusline")
-    set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-endif
 
 let mapleader = ","
 
