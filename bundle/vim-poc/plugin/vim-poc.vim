@@ -3,7 +3,6 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Menu items {{{"
-noremenu 100.100 PHP.Make\ Method<Tab><Leader>mh      :call MakeMethod(expand('<cword>'))<CR>
 noremenu 100.150 PHP.Break\ Array<Tab><Leader>ba      :call BreakArray(line('.'))<CR>
 noremenu 100.170 PHP.Break\ Params<Tab><Leader>bp     :call BreakParams(line('.'))<CR>
 noremenu 100.180 PHP.Enrow\ Arrows<Tab><Leader>ea     :call EnrowArrows(line("'<"), line("'>"))<CR>
@@ -19,10 +18,6 @@ vnoremenu 100.650 PHP.Find\ occurences<Tab><Leader>ff :call FindOccurences(getli
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " List of shortcuts {{{
-" Creates method using word under cursor as a name
-noremap <Leader>mh :call MakeMethod(expand('<cword>'))<CR>
-" Runs PHP syntax check on the current file or directory.
-noremap <Leader>mm :execute 'make %'<CR>
 " Runs PHP Mess Detector on the current file or directory.
 " See http://phpmd.org
 noremap <Leader>md :call RunMessDetection()<CR>
@@ -282,41 +277,7 @@ function! MakeClass()
         \ "{",
         \ "}"]
     call append(0, text)
-endfunction
-" }}}
-
-" MakeMethod {{{
-function! MakeMethod(name)
-    let indent = "    "
-    let text = [
-                \ '',
-                \ indent . 'public function ' . a:name . '()',
-                \ indent . '{',
-                \ indent . '}',
-                \ ]
-    call append(searchpair('{', '', '}', 'Wnr')-1, text)
-    normal G2k
-endfunction
-" }}}
-
-" MakeTestMethod {{{
-function! MakeTestMethod(name)
-    execute ':d'
-    let indent = "    "
-    let class = matchstr(@%, '\zs[a-zA-Z_]\+\zeTest\.')
-    let text = [
-                \ indent . '/**',
-                \ indent . ' * @test',
-                \ indent . ' * @covers ' . class . '::' . a:name,
-                \ indent . ' */',
-                \ indent . 'public function ' . a:name . '()',
-                \ indent . '{',
-                \ indent . indent . '/** @var $object Testing' . class . ' */',
-                \ indent . indent . '$object = $this->getObject();',
-                \ indent . indent . '$this->fail("TODO");',
-                \ indent . '}',
-                \ ]
-    call append(line('.')-1, text)
+    execute ':$d'
 endfunction
 " }}}
 
