@@ -6,7 +6,7 @@
 noremenu 100.100 PHP.Make\ Method<Tab><Leader>mh      :call MakeMethod(expand('<cword>'))<CR>
 noremenu 100.150 PHP.Break\ Array<Tab><Leader>ba      :call BreakArray(line('.'))<CR>
 noremenu 100.170 PHP.Break\ Params<Tab><Leader>bp     :call BreakParams(line('.'))<CR>
-noremenu 100.200 PHP.Check\ Syntax<Tab><Leader>mm     :call RunSyntaxCheck()<CR>
+noremenu 100.180 PHP.Enrow\ Arrows<Tab><Leader>ea     :call EnrowArrows(line("'<"), line("'>"))<CR>
 noremenu 100.300 PHP.Mess\ Detector<Tab><Leader>md    :call RunMessDetection()<CR>
 noremenu 100.400 PHP.Code\ Sniffer<Tab><Leader>mf     :call RunCodeSniff()<CR>
 noremenu 100.500 PHP.Code\ Duplication<Tab><Leader>mp :call RunCopyPasteDetection()<CR>
@@ -48,6 +48,8 @@ vnoremap  <Leader>ext :<C-U>call ExtractToNewFunction(line("."), line("'>"))<CR>
 nnoremap <Leader>ba :call BreakArray(line('.'))<CR>
 " Breaks function parameters defined in one line
 nnoremap <Leader>bp :call BreakParams(line('.'))<CR>
+" Aligns double arrows (=>) in selected lines
+vnoremap <Leader>ea :call EnrowArrows(line("'<"), line("'>"))<CR>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -484,5 +486,27 @@ function! BreakParams(line_number)
         call append(line('.')-1, line_to_append.separator)
         let idx = idx + 1
     endfor
+endfunction
+" }}}
+
+" EnrowArrows(from_line_no, to_line_no) {{{
+function! EnrowArrows(from_line_no, to_line_no)
+    let pattern = "="
+    if a:from_line_no > a:to_line_no
+        return
+    endif
+    let offsets = {}
+    let cur_line_no = a:from_line_no
+    while cur_line_no <= a:to_line_no
+        let offsets[cur_line_no] = match(getline(cur_line_no), pattern)
+        let cur_line_no += 1
+    endwhile
+    let longest = max(offsets)
+    let cur_line_no = a:from_line_no
+    while cur_line_no <= a:to_line_no
+        let diff = longest - offsets[cur_line_no]
+        call setline(cur_line_no, substitute(getline(cur_line_no), pattern, repeat(" ", diff).pattern, ''))
+        let cur_line_no += 1
+    endwhile
 endfunction
 " }}}
