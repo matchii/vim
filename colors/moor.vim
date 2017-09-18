@@ -11,7 +11,7 @@ if exists("syntax_on")
     syntax reset
 endif
 
-let colors_name = "autumn"
+let colors_name = "moor"
 
 if !exists("g:badwolf_html_link_underline") " {{{
     let g:badwolf_html_link_underline = 1
@@ -250,7 +250,7 @@ call s:HL('Repeat',      'rust', '', 'none')
 
 " Functions and variable declarations are orange, because plain looks weird.
 call s:HL('Identifier', 'leaf', '', 'none')
-call s:HL('Function',   'plain', '', 'none')
+call s:HL('Function',   'leaf', '', 'none')
 
 " Preprocessor stuff is lime, to make it pop.
 "
