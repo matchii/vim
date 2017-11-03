@@ -436,9 +436,14 @@ function! BreakParams(line_number)
     let this_line = getline(a:line_number)
     let indent = matchstr(this_line, '^\zs\s*\ze')
     let new_indent = indent.'    '
-    let inside = matchstr(this_line, '(\zs.*\ze)')
+    let inside = matchstr(this_line, '(\zs[^)].\+\ze)')
     let tokens = split(inside, ',')
-    execute "normal! 0f(lci(\n"
+    let start = match(this_line, "([^)]")
+    if l:start == -1
+        echo "No params list found"
+        return
+    endif
+    execute "normal! 0".start."llci(\n"
     let idx = 1
     let tokens_count = len(tokens)
     for token in tokens
