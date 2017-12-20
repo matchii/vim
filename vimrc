@@ -189,9 +189,6 @@ nnoremap <Leader>ip :call PhpDocSingle()<CR>
 vnoremap <Leader>ip :call Ph(pRa)nge()<CR>
 
 
-inoremap {% {%  %}<Left><Left><Left>
-inoremap {# {#  #}<Left><Left><Left>
-inoremap {{ {{  }}<Left><Left><Left>
 inoremap {<Space> {  }<Left><Left>
 inoremap {<CR>     {<CR>}<Esc>O
 inoremap        (  ()<Left>
