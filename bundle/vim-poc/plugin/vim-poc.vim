@@ -10,8 +10,8 @@ noremenu 100.180 PHP.Enrow\ Arrows<Tab><Leader>ea     :call EnrowArrows(line("'<
 noremenu 100.300 PHP.Mess\ Detector<Tab><Leader>md    :call RunMessDetection()<CR>
 noremenu 100.400 PHP.Code\ Sniffer<Tab><Leader>mf     :call RunCodeSniff()<CR>
 noremenu 100.500 PHP.Code\ Duplication<Tab><Leader>mp :call RunCopyPasteDetection()<CR>
-nnoremenu 100.600 PHP.Find\ occurences<Tab><Leader>ff :call FindOccurences(expand('<cword>'))<CR>
-vnoremenu 100.650 PHP.Find\ occurences<Tab><Leader>ff :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<CR>
+nnoremenu 100.600 PHP.Find\ occurences<Tab><F2>       :call FindOccurences(expand('<cword>'))<CR>
+vnoremenu 100.650 PHP.Find\ occurences<Tab><F2>       :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<CR>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -29,9 +29,9 @@ noremap <Leader>mf :call RunCodeSniff()<CR>
 " See https://github.com/sebastianbergmann/phpcpd
 noremap <Leader>mp :call RunCopyPasteDetection()<CR>
 " Shows occurences of word under cursor
-nnoremap <Leader>ff :call FindOccurences(expand('<cword>'))<CR>
+nnoremap <F2> :call FindOccurences(expand('<cword>'))<CR>
 " Shows occurences of visually selected text
-vnoremap <Leader>ff :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<CR>
+vnoremap <F2> :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<CR>
 " Creates condition block
 noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>k0f(a
 vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>k0f(a
@@ -101,6 +101,12 @@ function! FindOccurences(string)
     execute 'w'
 
     execute 'syn match   searched   "' . a:string . '"'
+endfunction
+" }}}
+
+" FO - alias dla FindOccurences {{{
+function! FO(string)
+    call FindOccurences(a:string)
 endfunction
 " }}}
 
