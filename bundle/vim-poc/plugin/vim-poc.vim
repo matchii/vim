@@ -166,20 +166,37 @@ endfunction
 " }}}
 
 " SetComment {{{
-function! SetComment(first_line, last_line)
+function! SetComment(first_line, last_line, begin_comment, end_comment)
     if a:first_line > a:last_line
         return
     endif
-    let prev_line = a:first_line - 1
-    let indent = matchstr(getline(a:first_line), '^\zs\s*\ze')
+    if a:first_line == a:last_line
+        call SetOnelineComment(a:first_line, a:begin_comment, a:end_comment)
+    else
+        call SetMultilineComment(a:first_line, a:last_line, a:begin_comment, a:end_comment)
+    endif
+endfunction
+" }}}
 
-    call append(a:last_line, ' */')
+" SetOnelineComment {{{
+function! SetOnelineComment(line, begin_comment, end_comment)
+    let new_line = substitute(getline(a:line), "\\(^\\s\*\\)", '\1'.a:begin_comment.' ', '')
+    let new_line = substitute(new_line, "$", a:end_comment, '')
+    call setline(a:line, new_line)
+endf
+" }}}
+
+" SetMultilineComment {{{
+function! SetMultilineComment(first_line, last_line, begin_comment, end_comment)
+    let prev_line = a:first_line - 1
+
+    call append(a:last_line, a:end_comment)
     let cur_line = a:last_line
     while cur_line >= a:first_line
         call setline(cur_line, substitute(getline(cur_line), "^", "", ''))
         let cur_line -= 1
     endwhile
-    call append(prev_line, '/*')
+    call append(prev_line, a:begin_comment)
 endfunction
 " }}}
 
