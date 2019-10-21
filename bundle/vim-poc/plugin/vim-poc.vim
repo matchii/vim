@@ -93,7 +93,8 @@ endfunction
 function! FindOccurences(string)
     let l:file = substitute(a:string, '\s\+', '_', 'g')[0:64].'.occur'
     execute 'redir! > /tmp/' . l:file
-    execute 'silent !szukaj "' . a:string . '"'
+    let l:cmd = "szukaj '" . a:string . "' " . g:grep_additional_args
+    execute 'silent !bash -ic "' . l:cmd . '"'
     execute 'redir END'
     execute 'split'
     execute 'e /tmp/' . l:file

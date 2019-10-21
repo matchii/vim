@@ -22,3 +22,8 @@
 " Arguments for phpcs when run by Syntastic (:SyntasticCheck phpcs)
 " Example: let g:syntastic_php_phpcs_args='--standard=PSR2'
 " }}}
+
+" let g:grep_additional_args {{{
+" Arguments for searching utility (for grep, basically).
+" Example: let g:grep_additional_args='--exclude-dir=mongodata'
+" }}}
