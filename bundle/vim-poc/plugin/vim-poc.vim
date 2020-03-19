@@ -6,6 +6,7 @@
 noremenu 100.130 PHP.Extract\ Code<Tab><Leader>ext    :call ExtractToNewFunction(line("."), line("'>"))<CR>
 noremenu 100.150 PHP.Break\ Array<Tab><Leader>ba      :call BreakArray(line('.'))<CR>
 noremenu 100.170 PHP.Break\ Params<Tab><Leader>bp     :call BreakParams(line('.'))<CR>
+noremenu 100.150 PHP.Break\ Arrows<Tab><Leader>br     :call BreakArrows(line('.'))<CR>
 noremenu 100.180 PHP.Enrow\ Arrows<Tab><Leader>ea     :call EnrowArrows(line("'<"), line("'>"))<CR>
 noremenu 100.300 PHP.Mess\ Detector<Tab><Leader>md    :call RunMessDetection()<CR>
 noremenu 100.400 PHP.Code\ Sniffer<Tab><Leader>mf     :call RunCodeSniff()<CR>
@@ -44,6 +45,8 @@ vnoremap  <Leader>ext :<C-U>call ExtractToNewFunction(line("."), line("'>"))<CR>
 nnoremap <Leader>ba :call BreakArray(line('.'))<CR>
 " Breaks function parameters defined in one line
 nnoremap <Leader>bp :call BreakParams(line('.'))<CR>
+" Breaks chained method calls
+nnoremap <Leader>br :call BreakArrows(line('.'))<CR>
 " Aligns double arrows (=>) in selected lines
 vnoremap <Leader>ea :call EnrowArrows(line("'<"), line("'>"))<CR>
 " }}}
@@ -483,6 +486,15 @@ function! BreakParams(line_number)
 endfunction
 " }}}
 
+" BreakArrows(line_number) {{{
+function! BreakArrows(line_number)
+    let this_line = getline(a:line_number)
+    let indent = matchstr(this_line, '^\zs\s*\ze')
+    let new_indent = indent.'    '
+    execute 'silent! s/->/\r'.l:new_indent.'->/g'
+endfunction
+" }}}
+"
 " EnrowArrows(from_line_no, to_line_no) {{{
 function! EnrowArrows(from_line_no, to_line_no)
     let pattern = "="
