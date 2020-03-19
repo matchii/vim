@@ -1,8 +1,3 @@
-" If host specific configuration is needed, create unversioned file config.vim
-if filereadable(expand($HOME."/.vim/config.vim"))
-    source ~/.vim/config.vim
-endif
-
 """"""""""""""""""""""""""""""""""""""""
 """"" opcje ogólne
 """"""""""""""""""""""""""""""""""""""""
@@ -41,8 +36,6 @@ set hlsearch
 " kolorowanie składni
 syntax on
 
-colorscheme moor
-
 " dolny pasek
 set ruler
 set showcmd
@@ -51,7 +44,7 @@ set showcmd
 set ts=4
 set shiftwidth=4
 set list
-set listchars=tab:+—,trail:·
+set listchars=tab:\|\ ,trail:·
 set expandtab
 set softtabstop=4
 
@@ -157,7 +150,8 @@ noremap <F8> <Esc><C-w>k:q<CR>
 " powrót do aktualnego katalogu
 noremap <F9> :silent e .<CR>
 
-noremap <F11> :set foldmethod=manual<CR>
+" otwiera status gita w nowej karcie
+noremap <F11> <Esc>:silent Te<CR>:Gstatus<CR><C-w>j:q<CR>
 " nowa karta
 " map <F3> :tabe<CR>
 " map <F3> :tabNext<Enter> 
@@ -203,6 +197,8 @@ let g:vdebug_options['path_maps'] = {"/var/www": "/home/maciejwatras/theqar"}
 """"" skróty
 """"""""""""""""""""""""""""""""""""""""
 
+inoremap {3 {{{<CR><CR>}}}<Up>
+
 iab ii if () <C-V>{<CR>}<ESC>kf(
 iab rt return true;
 iab rf return false;
@@ -210,5 +206,13 @@ iab tne throw new Exception("");<ESC>3h
 iab pf public function()<CR><C-V>{<CR>}<ESC>2k2ea
 iab vf private function()<CR><C-V>{<CR>}<ESC>2k2ea
 iab psf public static function
+iab fn function () {<CR>
 iab tt <table><CR><thead><CR><tr><CR><th></th><CR></tr><CR></thead><CR><tbody><CR><tr><CR><td></td><CR></tr><CR></tbody><CR></table>
 iab cl console.log()<ESC>ha
+
+" If host specific configuration is needed, create unversioned file config.vim
+" You may use config.vim.example as a template
+if filereadable(expand($HOME."/.vim/config.vim"))
+    source ~/.vim/config.vim
+endif
+" Nothing should go below this line.

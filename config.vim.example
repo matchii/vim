@@ -1,0 +1,21 @@
+" This is template for config.vim file.
+"
+" :!cp config.vim.example config.vim
+"
+" config.vim is intended for host-specific settings.
+" It is loaded at the end of vimrc and unversioned.
+
+""""""""""""""""""""""""""""""""""""""""
+""""" fugitive
+""""""""""""""""""""""""""""""""""""""""
+" gałąź git w linii statusu, dla wtyczki fugitive
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+""""""""""""""""""""""""""""""""""""""""
+""""" VimWiki
+""""""""""""""""""""""""""""""""""""""""
+let g:vimwiki_folding='list'
+
+if has("gui_running")
+    set guifont=Ubuntu\ Mono\ 13
+endif
