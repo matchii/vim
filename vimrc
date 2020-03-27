@@ -121,10 +121,6 @@ inoremap <expr> "  strpart(getline('.'), col('.')-1, 1) == '"' ? "\<Right>" : '"
 inoremap <expr> '  strpart(getline('.'), col('.')-1, 1) == "'" ? "\<Right>" : "''<Left>"
 inoremap <expr> `  strpart(getline('.'), col('.')-1, 1) == "`" ? "\<Right>" : "``<Left>"
 
-" otwiera odnośnik do słowa pod kursorem w nowej karcie
-noremap <F3> <ESC>:call OpenTagInNewTab(expand("<cword>"))<CR>
-vnoremap <F3> <ESC>:call OpenTagInNewTab(getline(".")[col("'<")-1:col("'>")-1])<CR>
-
 " otwiera w nowej karcie plik pod kursorem
 " działa jeśli ścieżka zaczyna się na początku linii i kończy drukropkiem -
 " czyli jak w pliku .occur (patrz PHP -> Find occurences)
