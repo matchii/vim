@@ -1,11 +1,7 @@
---recurse=yes
---exclude=.git
---exclude=composer.phar
---fields=+aimS
---languages=php
---PHP-kinds=+cfi-v
---tag-relative=yes
---regex-PHP=/abstract class ([^ ]*)/\1/c/
---regex-PHP=/^[ \t]*trait ([^ ]*)/\1/c/
---regex-PHP=/(public |static |abstract |protected |private )+ function +([^ \(]*)/\2/f/
---regex-PHP=/^[ \t]*const[ ]+([^ ]*)/\1/n/
+#!/bin/sh
+set -e
+PATH="/usr/local/bin:$PATH"
+dir="`git rev-parse --git-dir`"
+trap 'rm -f "$dir/$$.tags"' EXIT
+ctags --tag-relative=yes -R -f "$dir/$$.tags" --fields=+aimlS --languages=php --PHP-kinds=+cdfint-av --exclude=composer.phar --exclude=*Test.php --exclude=*phpunit* --exclude="\.git"
+mv "$dir/$$.tags" "$dir/tags"

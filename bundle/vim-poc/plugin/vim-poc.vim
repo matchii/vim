@@ -348,12 +348,6 @@ function! SetProject()
 endfunction
 " }}}
 
-" BuildTags {{{
-function! BuildTags()
-    execute '!ctags -R --languages=PHP '.g:ctags_exclude.' -f tags *'
-endfunction
-" }}}
-
 " VarDump {{{
 function! VarDump(var, value, line)
     execute "!echo linia ".a:line.":    ".a:var." = ".a:value." >> /home/maciej/vim_var_dump.txt"

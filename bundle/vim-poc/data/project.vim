@@ -27,3 +27,5 @@
 " Arguments for searching utility (for grep, basically).
 " Example: let g:grep_additional_args='--exclude-dir=mongodata'
 " }}}
+
+set tags=.git/tags

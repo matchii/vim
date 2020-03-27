@@ -99,7 +99,6 @@ noremap  <Leader>it :call SetTryCatchBlock(line('.'), line('.'))<CR>j0f(a
 vnoremap  <Leader>it :<C-U>call SetTryCatchBlock(line("."), line("'>"))<CR>/}\s*catch<CR>0f(a
 
 noremap <Leader>fsp :call SetProject()<CR>
-noremap <Leader>bt :call BuildTags()<CR><CR>
 " objęcie słowa apostrofami/cudzysłowami/nawiasami
 noremap <Leader>( <ESC>ciw(<C-R>")<ESC>
 vnoremap <Leader>( "qc(<Esc>pa)<Esc>%
