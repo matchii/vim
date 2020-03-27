@@ -209,6 +209,16 @@ iab fn function () {<CR>
 iab tt <table><CR><thead><CR><tr><CR><th></th><CR></tr><CR></thead><CR><tbody><CR><tr><CR><td></td><CR></tr><CR></tbody><CR></table>
 iab cl console.log()<ESC>ha
 
+""""" Syntastic {{{
+let g:syntastic_php_phpmd_quiet_warnings = { "regex": "Avoid variables with short names like \$id." }
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+" }}}
+
 " If host specific configuration is needed, create unversioned file config.vim
 " You may use config.vim.example as a template
 if filereadable(expand($HOME."/.vim/config.vim"))

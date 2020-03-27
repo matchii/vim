@@ -8,11 +8,8 @@ noremenu 100.150 PHP.Break\ Array<Tab><Leader>ba      :call BreakArray(line('.')
 noremenu 100.170 PHP.Break\ Params<Tab><Leader>bp     :call BreakParams(line('.'))<CR>
 noremenu 100.150 PHP.Break\ Arrows<Tab><Leader>br     :call BreakArrows(line('.'))<CR>
 noremenu 100.180 PHP.Enrow\ Arrows<Tab><Leader>ea     :call EnrowArrows(line("'<"), line("'>"))<CR>
-noremenu 100.300 PHP.Mess\ Detector<Tab><Leader>md    :call RunMessDetection()<CR>
-noremenu 100.400 PHP.Code\ Sniffer<Tab><Leader>mf     :call RunCodeSniff()<CR>
 noremenu 100.500 PHP.Code\ Duplication<Tab><Leader>mp :call RunCopyPasteDetection()<CR>
-nnoremenu 100.600 PHP.Find\ occurences<Tab><F2>       :call FindOccurences(expand('<cword>'))<CR>
-vnoremenu 100.650 PHP.Find\ occurences<Tab><F2>       :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<CR>
+nnoremenu 100.600 PHP.Toggle NERDTree<Tab><F2>        :NERDTreeToggle<CR>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -20,19 +17,11 @@ vnoremenu 100.650 PHP.Find\ occurences<Tab><F2>       :call FindOccurences(getli
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " List of shortcuts {{{
-" Runs PHP Mess Detector on the current file or directory.
-" See http://phpmd.org
-noremap <Leader>md :call RunMessDetection()<CR>
-" Runs PHP Code Sniffer on the current file or directory.
-" See https://github.com/squizlabs/PHP_CodeSniffer
-noremap <Leader>mf :call RunCodeSniff()<CR>
 " Runs PHP Copy/Paste Detector on the current file or directory.
 " See https://github.com/sebastianbergmann/phpcpd
 noremap <Leader>mp :call RunCopyPasteDetection()<CR>
 " Shows occurences of word under cursor
-nnoremap <F2> :call FindOccurences(expand('<cword>'))<CR>
-" Shows occurences of visually selected text
-vnoremap <F2> :call FindOccurences(getline(".")[col("'<")-1:col("'>")-1])<CR>
+nnoremap <F2> :NERDTreeToggle<CR>
 " Creates condition block
 noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>k0f(a
 vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>k0f(a
@@ -54,32 +43,6 @@ vnoremap <Leader>ea :call EnrowArrows(line("'<"), line("'>"))<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"" FUNCTIONS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" RunMessDetection {{{
-function! RunMessDetection()
-    let l:file = 'mess_in_' . expand('%:t') . '.mess'
-    execute 'redir! > /tmp/' . l:file
-    execute 'silent !phpmd ' . @% . ' text design,unusedcode,codesize | sed s/^.*:// -'
-    execute 'redir END'
-    execute 'split'
-    " Hint: To open new buffer next to, instead of 'split' use 'Te'
-    execute 'e /tmp/' . l:file
-    "TODO: Now I want to implement the functionality that clicking on the line
-    "number in md report moves cursor in the file buffer to that line.
-endfunction
-" }}}
-
-" RunCodeSniff {{{
-function! RunCodeSniff()
-    let l:file = 'smell_in_' . expand('%:t') . '.sniff'
-    let l:cs_standard = get(g:, 'code_style_standard', 'PSR2')
-    execute 'redir! > /tmp/' . l:file
-    execute 'silent !phpcs --standard=' . cs_standard . ' --report-width=120 ' . @%
-    execute 'redir END'
-    execute 'split'
-    execute 'e /tmp/' . l:file
-endfunction
-" }}}
 
 " RunCopyPasteDetection {{{
 function! RunCopyPasteDetection()
