@@ -215,6 +215,14 @@ set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
 " }}}
 
+""""" persistent undo {{{
+" https://stackoverflow.com/questions/5700389/using-vims-persistent-undo/22676189
+set undofile                " Save undos after file closes
+set undodir=$HOME/.vim/undo " where to save undo histories
+set undolevels=1000         " How many undos
+set undoreload=10000        " number of lines to save for undo
+" }}}
+
 " If host specific configuration is needed, create unversioned file config.vim
 " You may use config.vim.example as a template
 if filereadable(expand($HOME."/.vim/config.vim"))
