@@ -4,5 +4,6 @@
 /bundle/*
 !/bundle/vim-poc
 /config.vim
+/gconfig.vim
 /undo
 !/undo/.gitkeep
