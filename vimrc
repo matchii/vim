@@ -194,16 +194,12 @@ let g:vdebug_options['path_maps'] = {"/var/www": "/home/maciejwatras/theqar"}
 
 inoremap {3 {{{<CR><CR>}}}<Up>
 
-iab ii if () <C-V>{<CR>}<ESC>kf(
-iab rt return true;
-iab rf return false;
 iab tne throw new Exception("");<ESC>3h
-iab pf public function()<CR><C-V>{<CR>}<ESC>2k2ea
-iab vf private function()<CR><C-V>{<CR>}<ESC>2k2ea
 iab psf public static function
-iab fn function () {<CR>
-iab tt <table><CR><thead><CR><tr><CR><th></th><CR></tr><CR></thead><CR><tbody><CR><tr><CR><td></td><CR></tr><CR></tbody><CR></table>
-iab cl console.log()<ESC>ha
+
+"""" UltiSnips {{{
+let g:UltiSnipsEditSplit='horizontal'
+" }}}
 
 """"" Syntastic {{{
 let g:syntastic_php_phpmd_quiet_warnings = { "regex": "Avoid variables with short names like \$id." }

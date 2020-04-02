@@ -25,14 +25,3 @@ noremap <Leader>mc :execute MakeClass()<CR>
 inoremap <Leader>ip <ESC>:call PhpDocSingle()<CR>i
 nnoremap <Leader>ip :call PhpDocSingle()<CR>
 vnoremap <Leader>ip :call Ph(pRa)nge()<CR>
-
-iab rr return $result;
-iab rs return $this;
-iab ie <?php if (): ?><CR><?php endif ?><ESC>kF(a
-iab fe foreach () <C-V>{<CR>}<ESC>kf(
-iab fd <?php foreach (): ?><CR><?php endforeach ?><ESC>kF(a
-iab vd var_dump($);<ESC>2h
-iab vi var_dump($);die;<ESC>6h
-iab pe <?=  ?><ESC>2h
-iab pp <?php  ?><ESC>2h
-iab t> $this-

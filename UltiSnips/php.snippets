@@ -1,0 +1,78 @@
+global !p
+def visibility(t, opts):
+	if t:
+		opts = [ m[len(t):] for m in opts if m.startswith(t) ]
+	if len(opts) == 1:
+		return opts[0]
+	if len(opts) == 0:
+		return ''
+	return "(" + "|".join(opts) + ")"
+endglobal
+
+snippet fn "Anonymous function"
+function ($1) {
+	$2
+}
+endsnippet
+
+snippet pf "PHP function" b
+$1`!p snip.rv=visibility(t[1], ['public','protected','private'])` function ${2}($3): ${4:type}
+{
+	${5:throw new \Exception("Not implemented yet");}
+}
+endsnippet
+
+snippet td "TODO comment"
+// TODO $1 [`!v strftime("%Y-%m-%d %H:%M")`]
+endsnippet
+
+snippet dd "dump() and die" b
+dump($1);die;
+endsnippet
+
+snippet vi "var_dump() and die" b
+var_dump($1);die;
+endsnippet
+
+snippet vd "var_dump()" b
+var_dump($1);
+endsnippet
+
+snippet r "return" b
+return $1`!p snip.rv=visibility(t[1], ['true;','false;','null;','[];','$this;'])`
+endsnippet
+
+snippet t "$this->" w
+$this->
+endsnippet
+
+snippet SW "Suppress phpmd warning"
+@SuppressWarnings(PHPMD.`!p snip.rv=visibility(t[1], ['ShortMethodName'])`)
+endsnippet
+
+snippet fe "foreach loop" b
+foreach ($1 as $2) {
+	$3
+}
+endsnippet
+
+# phtml
+snippet pp "php tag"
+<?php $1 ?>
+endsnippet
+
+snippet pe "echo tag"
+<?= $1 ?>
+endsnippet
+
+snippet ie "if statement in phtml" b
+<?php if ($1): ?>
+	$2
+<?php endif ?>
+endsnippet
+
+snippet fd "foreach loop in phtml" b
+<?php foreach ($1 as $2): ?>
+	$3
+<?php endforeach ?>
+endsnippet
