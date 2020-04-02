@@ -72,13 +72,6 @@ autocmd BufReadPre *.wiki setlocal textwidth=100
 """"" mapowania ogólne
 """"""""""""""""""""""""""""""""""""""""
 
-" grep
-nnoremap <Leader>g :set operatorfunc=<SID>GrepOperator<CR>g@
-vnoremap <Leader>g :<C-U>call <SID>GrepOperator(visualmode())<CR>
-
-" kopiowanie całego bufora do schowka systemowego
-nnoremap <Leader>j <ESC>ggVG"+y<C-O><C-O>
-
 " wybór zakładki
 nnoremap <A-1> 1gt
 nnoremap <A-2> 2gt
@@ -121,12 +114,6 @@ inoremap <expr> "  strpart(getline('.'), col('.')-1, 1) == '"' ? "\<Right>" : '"
 inoremap <expr> '  strpart(getline('.'), col('.')-1, 1) == "'" ? "\<Right>" : "''<Left>"
 inoremap <expr> `  strpart(getline('.'), col('.')-1, 1) == "`" ? "\<Right>" : "``<Left>"
 
-" otwiera w nowej karcie plik pod kursorem
-" działa jeśli ścieżka zaczyna się na początku linii i kończy drukropkiem -
-" czyli jak w pliku .occur (patrz PHP -> Find occurences)
-noremap <F4> <ESC>:call JumpToOccurence(getline("."))<CR>
-vnoremap <F4> <ESC>:call OpenFileInNewTab(getline(".")[col("'<")-1:col("'>")-1])<CR>
-
 " nowa karta z listą plików
 noremap <C-n> <ESC>:silent Te<CR>
 
@@ -141,15 +128,6 @@ noremap <F7> <Esc><C-w>j:q<CR>
 
 " zamyka górny bufor
 noremap <F8> <Esc><C-w>k:q<CR>
-
-" powrót do aktualnego katalogu
-noremap <F9> :silent e .<CR>
-
-" otwiera status gita w nowej karcie
-noremap <F11> <Esc>:silent Te<CR>:Gstatus<CR><C-w>j:q<CR>
-" nowa karta
-" map <F3> :tabe<CR>
-" map <F3> :tabNext<Enter> 
 
 " wywołanie omnikompletacji
 inoremap <C-space> <C-X><C-O>

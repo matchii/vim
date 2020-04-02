@@ -3,12 +3,10 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Menu items {{{"
-noremenu 100.130 PHP.Extract\ Code<Tab><Leader>ext    :call ExtractToNewFunction(line("."), line("'>"))<CR>
 noremenu 100.150 PHP.Break\ Array<Tab><Leader>ba      :call BreakArray(line('.'))<CR>
 noremenu 100.170 PHP.Break\ Params<Tab><Leader>bp     :call BreakParams(line('.'))<CR>
 noremenu 100.150 PHP.Break\ Arrows<Tab><Leader>br     :call BreakArrows(line('.'))<CR>
 noremenu 100.180 PHP.Enrow\ Arrows<Tab><Leader>ea     :call EnrowArrows(line("'<"), line("'>"))<CR>
-noremenu 100.500 PHP.Code\ Duplication<Tab><Leader>mp :call RunCopyPasteDetection()<CR>
 nnoremenu 100.600 PHP.Toggle NERDTree<Tab><F2>        :NERDTreeToggle<CR>
 " }}}
 
@@ -17,10 +15,7 @@ nnoremenu 100.600 PHP.Toggle NERDTree<Tab><F2>        :NERDTreeToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " List of shortcuts {{{
-" Runs PHP Copy/Paste Detector on the current file or directory.
-" See https://github.com/sebastianbergmann/phpcpd
-noremap <Leader>mp :call RunCopyPasteDetection()<CR>
-" Shows occurences of word under cursor
+" Toggle NERDTree window
 nnoremap <F2> :NERDTreeToggle<CR>
 " Creates condition block
 noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>k0f(a
@@ -28,8 +23,6 @@ vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>k0f(a
 " Creates foreach block
 noremap  <Leader>fe :call SetForeachBlock(line('.'), line('.'))<CR>k0f(a
 vnoremap  <Leader>fe :<C-U>call SetForeachBlock(line("."), line("'>"))<CR>k0f(a
-" Extracts selected code to new method
-vnoremap  <Leader>ext :<C-U>call ExtractToNewFunction(line("."), line("'>"))<CR>
 " Breaks array defined in one line
 nnoremap <Leader>ba :call BreakArray(line('.'))<CR>
 " Breaks function parameters defined in one line
@@ -43,39 +36,6 @@ vnoremap <Leader>ea :call EnrowArrows(line("'<"), line("'>"))<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"" FUNCTIONS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" RunCopyPasteDetection {{{
-function! RunCopyPasteDetection()
-    let l:file = 'dupes_in_' . expand('%:t')
-    execute 'redir! > /tmp/' . l:file
-    execute 'silent !phpcpd ' . @%
-    execute 'redir END'
-    execute 'split'
-    execute 'e /tmp/' . l:file
-endfunction
-" }}}
-
-" FindOccurences {{{
-function! FindOccurences(string)
-    let l:file = substitute(a:string, '\s\+', '_', 'g')[0:64].'.occur'
-    execute 'redir! > /tmp/' . l:file
-    let l:cmd = "szukaj '" . a:string . "' " . g:grep_additional_args
-    execute 'silent !bash -ic "' . l:cmd . '"'
-    execute 'redir END'
-    execute 'split'
-    execute 'e /tmp/' . l:file
-    execute 'silent! %s/:\s\+/:/'
-    execute 'w'
-
-    execute 'syn match   searched   "' . a:string . '"'
-endfunction
-" }}}
-
-" FO - alias dla FindOccurences {{{
-function! FO(string)
-    call FindOccurences(a:string)
-endfunction
-" }}}
 
 " SetIfBlock obejmuje fragment pomiędzy liniami blokiem if i zwiększa wcięcie o 1 poziom {{{
 function! SetIfBlock(first_line, last_line)
@@ -132,176 +92,6 @@ function! SetTryCatchBlock(first_line, last_line)
 endfunction
 " }}}
 
-" SetComment {{{
-function! SetComment(first_line, last_line, begin_comment, end_comment)
-    if a:first_line > a:last_line
-        return
-    endif
-    if a:first_line == a:last_line
-        call SetOnelineComment(a:first_line, a:begin_comment, a:end_comment)
-    else
-        call SetMultilineComment(a:first_line, a:last_line, a:begin_comment, a:end_comment)
-    endif
-endfunction
-" }}}
-
-" SetOnelineComment {{{
-function! SetOnelineComment(line, begin_comment, end_comment)
-    let new_line = substitute(getline(a:line), "\\(^\\s\*\\)", '\1'.a:begin_comment.' ', '')
-    let new_line = substitute(new_line, "$", a:end_comment, '')
-    call setline(a:line, new_line)
-endf
-" }}}
-
-" SetMultilineComment {{{
-function! SetMultilineComment(first_line, last_line, begin_comment, end_comment)
-    let prev_line = a:first_line - 1
-
-    call append(a:last_line, a:end_comment)
-    let cur_line = a:last_line
-    while cur_line >= a:first_line
-        call setline(cur_line, substitute(getline(cur_line), "^", "", ''))
-        let cur_line -= 1
-    endwhile
-    call append(prev_line, a:begin_comment)
-endfunction
-" }}}
-
-" ExtractToNewFunction {{{
-" Wycina kod pomiędzy podanymi liniami (włącznie) i umieszcza go w nowej
-" funkcji
-" TODO zmienne stworzone przed wyciętym kodem powinny być parametrami nowej
-" metody
-function! ExtractToNewFunction(first_line, last_line)
-    if a:first_line > a:last_line
-        return
-    endif
-    let diff = a:last_line - a:first_line
-    " wcięcie pierwszego wiersza przenoszonego tekstu
-    let old_indent = matchstr(getline(a:first_line), '^\zs\s*\ze')
-    " pozwalamy użytkownikowi podać nową nazwę
-    call inputsave()
-    let inputMethodName = input('Method name: ')
-    call inputrestore()
-    " jeśli nie podał, generujemy automatycznie
-    if inputMethodName != ''
-        let methodName = inputMethodName
-    else
-        let methodName = 'rows_from_'.a:first_line.'_to_'.a:last_line
-    endif
-    " ustawiamy wcięcie na szerokość dwóch tabulatorów
-    let cur_line_number = a:first_line
-    for line in getline(a:first_line, a:last_line)
-        call setline(cur_line_number, substitute(line, "^".old_indent, "        ", ''))
-        let cur_line_number = cur_line_number + 1
-    endfor
-    " wycinamy linie...
-    execute "silent! normal ".a:first_line."Gd".l:diff."j"
-    " ... i zastępujemy je wywołaniem nowej metody
-    call append(a:first_line-1, old_indent.'$this->'.methodName.'();')
-
-    " wstawiamy deklarację metody...
-    let indent = "    "
-    let text = [
-                \ '',
-                \ indent . 'private function '.methodName.'()',
-                \ indent . '{',
-                \ indent . '}',
-                \ ]
-    call append(search('^    }$'), text)
-    " ... i wklejamy tekst do jej wnętrza
-    execute "silent! normal 3jp2k0f(b"
-endfunction
-" }}}
-
-" MakeSetterAndGetter {{{
-function! MakeSetterAndGetter(variable)
-    call MakeSetter(a:variable)
-    call MakeGetter(a:variable)
-endfunction
-" }}}
-
-" MakeGetter {{{
-function! MakeGetter(variable)
-    let var = a:variable
-    let cvar = substitute(var, '^_', '', '')
-    let cvar = toupper(cvar[0]).cvar[1:]
-    let indent = "    "
-    let l = line('.')
-    let text = [
-        \ '',
-        \ indent."public function get".cvar."()",
-        \ indent."{",
-        \ indent.indent."return $this->".var.";",
-        \ indent."}",
-    \ ]
-    call append(searchpair('{', '', '}', 'Wnr')-1, text)
-endfunction
-" }}}
-
-" MakeSetter {{{
-function! MakeSetter(variable)
-    let var = a:variable
-    let cvar = substitute(var, '^_', '', '')
-    let uvar = toupper(cvar[0]).cvar[1:]
-    let indent = "    "
-    let l = line('.')
-    let text = [
-        \ "",
-        \ indent."public function set".uvar."($".cvar.")",
-        \ indent."{",
-        \ indent.indent."$this->".var." = $".cvar.";",
-        \ "",
-        \ indent.indent."return $this;",
-        \ indent."}",
-    \ ]
-    call append(searchpair('{', '', '}', 'Wnr')-1, text)
-endfunction
-" }}}
-
-" MakeClass {{{
-function! MakeClass()
-    let text = [
-        \ '<?php',
-        \ '',
-        \ '/**',
-        \ ' * TODO Write here a few words about what this class is supposed to do.',
-        \ ' */',
-        \ "class " . matchstr(@%, '\zs[a-zA-Z_]\+\ze\.'),
-        \ "{",
-        \ "}"]
-    call append(0, text)
-    execute ':$d'
-endfunction
-" }}}
-
-" OpenTagInNewTab {{{
-function! OpenTagInNewTab(tag)
-    let l:tag = substitute(a:tag, "/", "_", "g")
-    execute "Te"
-    execute "tjump ".l:tag
-endfunction
-" }}}
-
-" OpenFileInNewTab {{{
-function! OpenFileInNewTab(filepath)
-    let l:filepath = substitute(a:filepath, "\r", "", "g")
-    execute "Te"
-    execute "e ".l:filepath
-endfunction
-" }}}
-
-" JumpToOccurence {{{
-function! JumpToOccurence(line)
-    let l:path = a:line[0:searchpos(":")[1]-2]
-    let l:number = a:line[len(l:path)+1:searchpos(":", 'n')[1]-2]
-    let l:filepath = substitute(l:path, "\r", "", "g")
-    execute "Te"
-    execute "e ".l:filepath
-    execute "silent! normal ".l:number."Gzozz"
-endfunction
-" }}}
-
 " SetProject {{{
 function! SetProject()
     normal! c
@@ -337,69 +127,6 @@ function! FormatForIn()
     normal! ggVGgq<CR><F5>
 endfunction
 " }}}
-
-" RunUnitTests wykonuje testy jednostkowe {{{
-function! RunUnitTests()
-    execute '!phpunit --bootstrap=' . g:unit_test_bootstrap . ' test/phpunit/unit/'
-endfunction
-" }}}
-
-" RunThisUnitTest wykonuje testy z aktualnego pliku {{{
-function! RunThisUnitTest()
-    if @% =~ 'Test\.php$'
-        execute '!phpunit --bootstrap=' . g:unit_test_bootstrap . ' %'
-    else
-        call RunTestForThisClass()
-    endif
-endfunction
-" }}}
-
-" RunTestForThisClass {{{
-function! RunTestForThisClass()
-    let testClassName = matchstr(@%, '\zs[a-zA-Z_]\+\ze\.')
-    let cmd = 'find . -name ' . testClassName . 'Test.php'
-    let testFile = glob("`" . cmd . "`")
-    if len(testFile) > 0
-        execute '!phpunit --bootstrap=' . g:unit_test_bootstrap . ' ' . testFile
-    else
-        echo 'Nie znaleziono testów dla tego pliku'
-    endif
-endfunction
-" }}}
-
-" GrepOperator {{{
-function! s:GrepOperator(type)
-    let saved_unnamed_register = @@
-
-    if a:type ==# 'v'
-        execute "normal! `<v`>y"
-    elseif a:type ==# 'char'
-        execute "normal! `[v`]y"
-    else
-        return
-    endif
-    silent execute "grep! -R " . shellescape(@@) . " ."
-    copen
-    let @@ = saved_unnamed_register
-endfunction
-" }}}
-
-" ColorLog {{{
-function! ColorLog()
-    let keyName = "[a-zA-Z\-_]\+"
-    execute 'syn clear'
-    execute 'syn match key0 "^[a-zA-Z0-9\-_]\+:"'
-    execute 'syn match key1 "^  [a-zA-Z0-9\-_]\+:"'
-    execute 'syn match key2 "^    [a-zA-Z0-9\-_]\+:"'
-    execute 'syn match time "^.* === new call ===$"'
-    execute 'syn match url  "http[s]\?:.*$"'
-    execute 'hi key0 guifg=#DDA0DD'
-    execute 'hi key1 guifg=#63B8FF'
-    execute 'hi key2 guifg=#8DEEEE'
-    execute 'hi time guifg=#FF8247'
-    execute 'hi url  guifg=#9ACD32'
-endfunction
-" }}}"
 
 " BreakArray(line_number) {{{
 function! BreakArray(line_number)
@@ -451,7 +178,7 @@ function! BreakArrows(line_number)
     execute 'silent! s/->/\r'.l:new_indent.'->/g'
 endfunction
 " }}}
-"
+
 " EnrowArrows(from_line_no, to_line_no) {{{
 function! EnrowArrows(from_line_no, to_line_no)
     let pattern = "="
