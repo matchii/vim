@@ -17,3 +17,9 @@ $ git clone https://github.com/preservim/nerdtree.git
 $ git clone https://github.com/Xuyuanp/nerdtree-git-plugin.git
 $ git clone https://github.com/tpope/vim-commentary.git
 ```
+
+## Przygotowanie projektu
+
+1. Skopiuj data/project.vim do korzenia projektu jako .project.vim
+2. Skopiuj data/ctags do .git/hooks/
+3. Dodaj polecenia do gconfig.vim

@@ -2,7 +2,6 @@
 .*.swp
 .netrwhist
 /bundle/*
-!/bundle/vim-poc
 /config.vim
 /gconfig.vim
 /undo
