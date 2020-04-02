@@ -60,7 +60,35 @@ filetype plugin indent on
 set wildmenu
 set wildmode=list:longest,full
 
-let mapleader = ","
+let mapleader = ','
+""""" lightline {{{
+set noshowmode
+
+function! LightlineFilename()
+  let root = fnamemodify(get(b:, 'git_dir'), ':h')
+  let path = expand('%:p')
+  if path[:len(root)-1] ==# root
+    return path[len(root)+1:]
+  endif
+  return expand('%')
+endfunction
+
+let g:lightline = {
+\   'active': {
+\       'left': [
+\           [ 'mode', 'paste' ],
+\           [ 'gitbranch', 'readonly', 'filename', 'modified', 'syntastic' ]
+\       ]
+\   },
+\   'component_function': {
+\       'gitbranch': 'FugitiveHead',
+\       'filename': 'LightlineFilename'
+\   },
+\   'component_expand': {
+\       'syntastic': 'SyntasticStatuslineFlag'
+\   }
+\ }
+" }}}
 
 let completeopt="menuone,longest,preview"
 
@@ -157,14 +185,13 @@ augroup filetype_xt
     au BufNewFile,BufRead *.xt  setf xt
 augroup END
 
-""""""""""""""""""""""""""""""""""""""""
-""""" Vdebug
-""""""""""""""""""""""""""""""""""""""""
+"""" Vdebug {{{
 if (!exists('g:vdebug_options'))
     let g:vdebug_options = {}
 endif
 let g:vdebug_options['port'] = 9099
 let g:vdebug_options['path_maps'] = {"/var/www": "/home/maciejwatras/theqar"}
+" }}}
 
 """"""""""""""""""""""""""""""""""""""""
 """"" skróty
@@ -175,18 +202,24 @@ inoremap {3 {{{<CR><CR>}}}<Up>
 iab tne throw new Exception("");<ESC>3h
 iab psf public static function
 
+"""" signify {{{
+let g:signify_sign_show_text = 0
+
+highlight SignifySignAdd                  ctermbg=green                guibg=#68cc95
+highlight SignifySignDelete ctermfg=black ctermbg=red    guifg=#ffffff guibg=#cc6893
+highlight SignifySignChange ctermfg=black ctermbg=yellow guifg=#000000 guibg=#ccca68
+" }}}
+
 """" UltiSnips {{{
 let g:UltiSnipsEditSplit='horizontal'
 " }}}
 
 """"" Syntastic {{{
 let g:syntastic_php_phpmd_quiet_warnings = { "regex": "Avoid variables with short names like \$id." }
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
+let g:syntastic_php_phpstan_exec = '~/.config/composer/vendor/bin/phpstan'
+let g:syntastic_php_phpstan_args = '--level 0'
 let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_check_on_open = 1
 " }}}
 
 """"" persistent undo {{{
