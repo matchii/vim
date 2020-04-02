@@ -1,8 +1,7 @@
-.swp
-.*.swp
 .netrwhist
 /bundle/*
 /config.vim
 /gconfig.vim
 /undo
 !/undo/.gitkeep
+/vendor
