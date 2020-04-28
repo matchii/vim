@@ -114,6 +114,8 @@ noremap <F7> <Esc><C-w>j:q<CR>
 " zamyka górny bufor
 noremap <F8> <Esc><C-w>k:q<CR>
 
+noremap <F9> <Esc>:TagbarToggle<CR>
+
 " wywołanie omnikompletacji
 inoremap <C-space> <C-X><C-O>
 
@@ -206,6 +208,12 @@ let g:lightline = {
 \       'syntastic': 'SyntasticStatuslineFlag'
 \   }
 \ }
+" }}}
+
+"""" tagbar {{{
+let g:tagbar_autofocus = 1
+let g:tagbar_iconchars = ['▸', '▾']
+let g:tagbar_zoomwidth = 0
 " }}}
 
 " }}}
