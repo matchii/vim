@@ -202,7 +202,6 @@ let g:lightline = {
 \   },
 \   'component_function': {
 \       'gitbranch': 'FugitiveHead',
-\       'filename': 'LightlineFilename'
 \   },
 \   'component_expand': {
 \       'syntastic': 'SyntasticStatuslineFlag'
