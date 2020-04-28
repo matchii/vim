@@ -61,7 +61,7 @@ snippet pp "php tag"
 <?php $1 ?>
 endsnippet
 
-snippet pe "echo tag"
+snippet pe "echo tag" w
 <?= $1 ?>
 endsnippet
 
@@ -75,4 +75,15 @@ snippet fd "foreach loop in phtml" b
 <?php foreach ($1 as $2): ?>
 	$3
 <?php endforeach ?>
+endsnippet
+
+snippet try "try .. catch block" b
+try {
+	${1:${VISUAL}}
+} catch ($2) {
+}
+endsnippet
+
+snippet ex "exception throw" b
+throw new \\${1}Exception($2);
 endsnippet
