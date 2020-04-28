@@ -6,6 +6,8 @@ set guioptions+=b
 set guioptions-=T
 " usunięcie paska menu
 set guioptions-=m
+" nie używaj wyskakującego okienka
+set guioptions+=c
 
 " If host specific gui configuration is needed, create unversioned file gconfig.vim
 " You may use config.vim.example as a template
