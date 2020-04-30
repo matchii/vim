@@ -149,9 +149,36 @@ augroup END
 
 autocmd BufReadPre *.wiki setlocal textwidth=100
 
-"""" WTYCZKI {{{
+"""" VimPlug {{{
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+call plug#begin('~/.vim/bundle')
 
-execute pathogen#infect()
+Plug 'matchii/vim-project', { 'branch': 'init_callback' }
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'phpactor/phpactor', { 'for': 'php' }
+Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'vimwiki/vimwiki'
+Plug 'itchyny/lightline.vim'
+Plug 'Yggdroot/indentLine'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'vim-syntastic/syntastic', { 'for': 'php' }
+Plug 'majutsushi/tagbar', { 'for': 'php' }
+Plug 'SirVer/ultisnips'
+Plug 'mhinz/vim-signify'
+Plug 'diepm/vim-rest-console', { 'for': 'rest' }
+Plug 'mattn/emmet-vim'
+
+call plug#end()
+" }}}
+
+"""" WTYCZKI {{{
 
 """" Vdebug {{{
 if (!exists('g:vdebug_options'))
