@@ -1,0 +1,78 @@
+set guifont=Ubuntu\ Mono\ 14
+
+set lines=40
+set columns=150
+
+"""" vimwiki {{{
+let g:vimwiki_list = [
+    \ {'path': '~/vimwiki/'},
+    \ { 'path': '~/vimwiki_md', 'syntax': 'markdown', 'ext': '.md' }
+    \ ]
+" }}}
+
+" Load projects' configuration if vim-project is installed
+if !empty(glob('~/.vim/bundle/vim-project/autoload/project.vim'))
+    let g:project_use_nerdtree = 1
+    " let g:project_enable_welcome = 0
+    set rtp+=~/.vim/bundle/vim-project/
+    call project#rc("~/projects")
+
+    Project  'pimcore-aptekagemini-docker/src'  , 'AptekaGemini'
+    Init     'AptekaGemini'                     , 'SetupAG'
+    Init     'AptekaGemini'                     , 'SetupAG2'
+
+    Project  'bagsoff/docker'               , 'Bagsoff docker'
+    Project  'bagsoff/docker/src/bagsoff'   , 'Bagsoff API'
+    Init     'Bagsoff API'                  , 'SetupBagsoffAPI'
+    Project  'bagsoff/docker/src/panel'     , 'Bagsoff panel'
+    Project  'bagsoff/docker/src/web'       , 'Bagsoff web'
+
+    Project  'selena-pim'   , 'Selena'
+    Init     'Selena'       , 'SetupSelena'
+
+    Project  'pimcore-maxelektro'   , 'Galicja'
+    Init     'Galicja'              , 'SetupGalicja'
+
+    Project  'dendrite.me'  , 'Dendrite'
+    Init     'Dendrite'     , 'SetupDendrite'
+    Callback 'Dendrite'     , 'CallbackDendrite'
+
+    Project  '~/.vim'   , 'Vim'
+
+    function! SetupPHPProject(cwd)
+        let g:phpactorInitialCwd = a:cwd
+        set tags=.git/tags
+        set foldnestmax=1
+        let g:syntastic_php_checkers = ['php', 'phpmd', 'phpstan']
+    endfunction
+
+    function! SetupAG(title)
+        let g:init_called_first = 1
+        call SetupPHPProject('/home/maciej/projects/pimcore-aptekagemini-docker/src')
+    endfunction
+
+    function! SetupAG2(title)
+        let g:init_called_second = 1
+        call SetupPHPProject('/home/maciej/projects/pimcore-aptekagemini-docker/src')
+    endfunction
+
+    function! SetupBagsoffAPI(title)
+        call SetupPHPProject('/home/maciej/projects/bagsoff/docker/src/bagsoff')
+    endfunction
+
+    function! SetupSelena(title)
+        call SetupPHPProject('/home/maciej/projects/selena-pim')
+    endfunction
+
+    function! SetupGalicja(title)
+        call SetupPHPProject('/home/maciej/projects/pimcore-maxelektro')
+    endfunction
+
+    function! SetupDendrite(title)
+        call SetupPHPProject('/home/maciej/projects/dendrite.me')
+    endfunction
+
+    function! CallbackDendrite(title)
+        let g:phpactorInitialCwd = '/home/maciej/projects/dendrite.me'
+    endfunction
+endif
