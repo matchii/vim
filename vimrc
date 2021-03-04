@@ -170,7 +170,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'vim-syntastic/syntastic', { 'for': 'php' }
+Plug 'dense-analysis/ale'
 Plug 'majutsushi/tagbar', { 'for': 'php' }
 Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-signify'
@@ -215,13 +215,24 @@ highlight SignifySignChange ctermfg=black ctermbg=yellow guifg=#000000 guibg=#cc
 let g:UltiSnipsEditSplit='horizontal'
 " }}}
 
-"""" Syntastic {{{
-let g:syntastic_php_phpmd_quiet_warnings = { "regex": "Avoid variables with short names like \$id." }
-let g:syntastic_php_phpstan_exec = '~/.config/composer/vendor/bin/phpstan'
-let g:syntastic_php_phpstan_args = '--level 0'
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_check_on_open = 1
-" }}}
+"""" ALE {{{
+let g:ale_linters_explicit = 1
+let g:ale_linters = {'php': ['php', 'phpmd']}
+
+" let g:ale_lint_on_text_changed = 0
+" let g:ale_lint_on_insert_leave = 0
+
+" let g:ale_set_loclist = 1 " :lopen
+" let g:ale_set_quickfix = 0
+let g:ale_set_highlights = 1 " podkreślenia
+let g:ale_set_signs = 1 " konflikt z Signify
+" let g:ale_echo_cursor = 1
+" let g:ale_virtualtext_cursor = 1
+" let g:ale_cursor_detail = 0 " otwiera bufor na górze po najechaniu na wiersz
+" let g:ale_set_balloons = 1
+
+let g:ale_php_phpmd_ruleset = 'phpmd_auto.xml'
+"}}}
 
 """" lightline {{{
 set noshowmode
@@ -239,14 +250,11 @@ let g:lightline = {
 \   'active': {
 \       'left': [
 \           [ 'mode', 'paste' ],
-\           [ 'gitbranch', 'readonly', 'filename', 'modified', 'syntastic' ]
+\           [ 'gitbranch', 'readonly', 'filename', 'modified' ]
 \       ]
 \   },
 \   'component_function': {
 \       'gitbranch': 'FugitiveHead',
-\   },
-\   'component_expand': {
-\       'syntastic': 'SyntasticStatuslineFlag'
 \   }
 \ }
 " }}}
