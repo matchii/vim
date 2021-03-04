@@ -162,7 +162,7 @@ call plug#begin('~/.vim/bundle')
 Plug 'matchii/vim-project', { 'branch': 'init_callback' }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'phpactor/phpactor', { 'for': 'php' }
+Plug 'phpactor/phpactor', { 'for': 'php', 'branch': 'master', 'do': 'composer install --no-dev -o' }
 Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'vimwiki/vimwiki'
