@@ -183,6 +183,10 @@ call plug#end()
 
 """" WTYCZKI {{{
 
+"""" fzf {{{
+command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, {'options': ['--exact']}, <bang>0)
+" }}}
+
 """" Vdebug {{{
 if (!exists('g:vdebug_options'))
     let g:vdebug_options = {}
