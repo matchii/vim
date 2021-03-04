@@ -7,7 +7,7 @@ noremenu 100.150 PHP.Break\ Array<Tab><Leader>ba      :call BreakArray(line('.')
 noremenu 100.170 PHP.Break\ Params<Tab><Leader>bp     :call BreakParams(line('.'))<CR>
 noremenu 100.150 PHP.Break\ Arrows<Tab><Leader>br     :call BreakArrows(line('.'))<CR>
 noremenu 100.180 PHP.Enrow\ Arrows<Tab><Leader>ea     :call EnrowArrows(line("'<"), line("'>"))<CR>
-nnoremenu 100.600 PHP.Toggle NERDTree<Tab><F2>        :NERDTreeToggle<CR>
+nnoremenu 100.600 PHP.Toggle NERDTree<Tab><C-F2>      :NERDTreeToggle<CR>
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -16,7 +16,7 @@ nnoremenu 100.600 PHP.Toggle NERDTree<Tab><F2>        :NERDTreeToggle<CR>
 
 " List of shortcuts {{{
 " Toggle NERDTree window
-nnoremap <F2> :NERDTreeToggle<CR>
+nnoremap <C-F2> :NERDTreeToggle<CR>
 " Creates condition block
 noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>k0f(a
 vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>k0f(a

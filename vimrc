@@ -97,7 +97,7 @@ inoremap <expr> '  strpart(getline('.'), col('.')-1, 1) == "'" ? "\<Right>" : "'
 inoremap <expr> `  strpart(getline('.'), col('.')-1, 1) == "`" ? "\<Right>" : "``<Left>"
 
 " otwiera listę buforów
-noremap <F3> <ESC>:BufExplorer<CR>
+noremap <F1> <ESC>:BufExplorer<CR>
 
 " nowa karta z listą plików
 noremap <C-n> <ESC>:silent Te<CR>
@@ -106,7 +106,7 @@ noremap <C-n> <ESC>:silent Te<CR>
 noremap <C-h> :nohlsearch<CR>
 
 " nowy pusty bufor
-noremap <F6> :enew<CR>
+noremap <C-F6> :enew<CR>
 
 " zamyka dolny bufor
 noremap <F7> <Esc><C-w>j:q<CR>
@@ -114,7 +114,9 @@ noremap <F7> <Esc><C-w>j:q<CR>
 " zamyka górny bufor
 noremap <F8> <Esc><C-w>k:q<CR>
 
-noremap <F9> <Esc>:TagbarToggle<CR>
+noremap <C-F9> <Esc>:TagbarToggle<CR>
+
+noremap <C-F11> <Esc>:Files<CR>
 
 " wywołanie omnikompletacji
 inoremap <C-space> <C-X><C-O>
@@ -174,6 +176,7 @@ Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-signify'
 Plug 'diepm/vim-rest-console', { 'for': 'rest' }
 Plug 'mattn/emmet-vim'
+Plug 'vim-vdebug/vdebug'
 
 call plug#end()
 " }}}
@@ -184,8 +187,20 @@ call plug#end()
 if (!exists('g:vdebug_options'))
     let g:vdebug_options = {}
 endif
-let g:vdebug_options['port'] = 9099
-let g:vdebug_options['path_maps'] = {"/var/www": "/home/maciejwatras/theqar"}
+let g:vdebug_options['watch_window_style'] = 'compact'
+let g:vdebug_keymap = {
+\    "run" : "<F5>",
+\    "run_to_cursor" : "<F9>",
+\    "step_over" : "<F2>",
+\    "step_into" : "<F3>",
+\    "step_out" : "<F4>",
+\    "close" : "<F6>",
+\    "detach" : "<C-F7>",
+\    "set_breakpoint" : "<C-F10>",
+\    "get_context" : "<F11>",
+\    "eval_under_cursor" : "<C-F12>",
+\    "eval_visual" : "<Leader>e",
+\}
 " }}}
 
 """" signify {{{
