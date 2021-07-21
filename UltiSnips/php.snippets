@@ -16,14 +16,43 @@ function ($1) {
 endsnippet
 
 snippet pf "PHP function" b
-$1`!p snip.rv=visibility(t[1], ['public','protected','private'])` function ${2}($3): ${4:type}
+$1`!p snip.rv=visibility(t[1], ['public','protected','private'])` function ${2}($3): ${4:void}
 {
 	${5:throw new \Exception("Not implemented yet");}
 }
 endsnippet
 
+snippet tf "Test function" b
+/**
+ * @test
+ */
+public function ${1}(): void
+{
+	${2:$this->fail('Test '.__METHOD__.' not implemented');}
+	// Given
+
+	// Assert
+
+	// When
+
+	// Then
+}
+endsnippet
+
+snippet mo "Create mock" b
+$$1 = $this->createMock($2::class);
+endsnippet
+
+snippet cm "Create configured mock" b
+$$1 = $this->createConfiguredMock($2::class, ['$3' => $4]);
+endsnippet
+
 snippet td "TODO comment"
 // TODO $1 [`!v strftime("%Y-%m-%d %H:%M")`]
+endsnippet
+
+snippet fm "FIXME comment"
+// FIXME $1
 endsnippet
 
 snippet v* "var type hint"
@@ -77,7 +106,7 @@ endsnippet
 
 snippet ie "if statement in phtml" b
 <?php if ($1): ?>
-	$2
+	${VISUAL}
 <?php endif ?>
 endsnippet
 
@@ -96,4 +125,8 @@ endsnippet
 
 snippet ex "exception throw" b
 throw new \\${1}Exception($2);
+endsnippet
+
+snippet ji "Link to Jira issue"
+https://jira.unity.pl/browse/$1
 endsnippet

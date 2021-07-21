@@ -25,6 +25,3 @@ augroup PhpactorMappings
     au FileType php vmap <buffer> <silent> <Leader>em :<C-u>PhpactorExtractMethod<CR>
     au FileType php nmap <buffer> <silent> <Leader>ec :<C-u>PhpactorExtractConstant<CR>
 augroup END
-
-noremap  <Leader>it :call SetTryCatchBlock(line('.'), line('.'))<CR>j0f(a
-vnoremap  <Leader>it :<C-U>call SetTryCatchBlock(line("."), line("'>"))<CR>/}\s*catch<CR>0f(a
