@@ -24,6 +24,7 @@ unmenu PopUp.Select\ &All
 nnoremenu PopUp.-SEP3-  :
 nnoremenu PopUp.Close   :x<CR>
 nnoremenu PopUp.Buffers :BufExplorer<CR>
+nnoremenu PopUp.Tagbar  :TagbarToggle<CR>
 
 nnoremenu PopUp.-Phpactor- :
 nnoremenu PopUp.GoTo<Tab><Leader>o              :PhpactorGotoDefinition<CR>
