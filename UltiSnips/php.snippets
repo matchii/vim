@@ -95,6 +95,14 @@ while ($1) {
 }
 endsnippet
 
+snippet sw "switch" b
+switch ($1) {
+case $2:
+	break;
+default:
+}
+endsnippet
+
 # phtml
 snippet pp "php tag"
 <?php $1 ?>
@@ -125,8 +133,4 @@ endsnippet
 
 snippet ex "exception throw" b
 throw new \\${1}Exception($2);
-endsnippet
-
-snippet ji "Link to Jira issue"
-https://jira.unity.pl/browse/$1
 endsnippet

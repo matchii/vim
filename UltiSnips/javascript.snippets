@@ -1,3 +1,14 @@
+global !p
+def visibility(t, opts):
+	if t:
+		opts = [ m[len(t):] for m in opts if m.startswith(t) ]
+	if len(opts) == 1:
+		return opts[0]
+	if len(opts) == 0:
+		return ''
+	return "(" + "|".join(opts) + ")"
+endglobal
+
 snippet fn "Create function"
 function ($1) {
 	$2
@@ -10,4 +21,13 @@ endsnippet
 
 snippet td "TODO comment"
 // TODO $1 [`!v strftime("%Y-%m-%d %H:%M")`]
+endsnippet
+
+snippet xcmp "ExtJs component definition (as object)"
+{
+	id: '$1',
+	xtype: '$2`!p snip.rv=visibility(t[1], ['textfield', 'label', 'button', 'panel'])`',
+	name: '',
+	html: ''
+}
 endsnippet
