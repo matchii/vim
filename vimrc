@@ -122,7 +122,7 @@ noremap <C-F11> <Esc>:Files<CR>
 inoremap <C-space> <C-X><C-O>
 
 " wcięcie zaznaczonego tekstu
-vnoremap <Tab> >
+" vnoremap <Tab> >
 vnoremap <S-Tab> <
 
 " spacja rozwija/zwija folding
@@ -163,6 +163,7 @@ Plug 'jlanzarotta/bufexplorer'
 Plug 'matchii/vim-project', { 'branch': 'init_callback' }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-unimpaired'
 Plug 'phpactor/phpactor', { 'for': 'php', 'branch': 'master', 'do': 'composer install --no-dev -o' }
 Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -172,10 +173,10 @@ Plug 'Yggdroot/indentLine'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'dense-analysis/ale'
-Plug 'majutsushi/tagbar', { 'for': 'php' }
+" Plug 'majutsushi/tagbar', { 'for': 'php' }
 Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-signify'
-Plug 'diepm/vim-rest-console', { 'for': 'rest' }
+" Plug 'diepm/vim-rest-console', { 'for': 'rest' }
 Plug 'mattn/emmet-vim'
 Plug 'vim-vdebug/vdebug'
 
@@ -228,9 +229,9 @@ let g:UltiSnipsEditSplit='horizontal'
 
 """" ALE {{{
 let g:ale_linters_explicit = 1
-let g:ale_linters = {'php': ['php', 'phpmd']}
+" let g:ale_lint_on_text_changed = 'never'
 
-" let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_text_changed = 0
 " let g:ale_lint_on_insert_leave = 0
 
 " let g:ale_set_loclist = 1 " :lopen
@@ -243,6 +244,8 @@ let g:ale_set_signs = 1 " konflikt z Signify
 " let g:ale_set_balloons = 1
 
 let g:ale_php_phpmd_ruleset = 'phpmd_auto.xml'
+let g:ale_php_phpstan_configuration = 'phpstan.neon'
+let g:ale_php_psalm_configuration = 'psalm.xml'
 "}}}
 
 """" lightline {{{
@@ -274,6 +277,10 @@ let g:lightline = {
 let g:tagbar_autofocus = 1
 let g:tagbar_iconchars = ['▸', '▾']
 let g:tagbar_zoomwidth = 0
+" }}}
+
+"""" NERDTree {{{
+let g:NERDTreeGitStatusPorcelainVersion = 1
 " }}}
 
 " }}}
