@@ -141,6 +141,7 @@ source ~/.vim/config/plugins/vim-project.vim
 source ~/.vim/config/plugins/vim-unimpaired.vim
 source ~/.vim/config/plugins/vdebug.vim
 source ~/.vim/config/plugins/vim-rest-console.vim
+source ~/.vim/config/plugins/vim-test.vim
 source ~/.vim/config/plugins/vimwiki.vim
 
 call plug#end()
