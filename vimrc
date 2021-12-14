@@ -159,6 +159,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.vim/bundle')
 
+Plug 'jlanzarotta/bufexplorer'
 Plug 'matchii/vim-project', { 'branch': 'init_callback' }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -182,6 +183,12 @@ call plug#end()
 " }}}
 
 """" WTYCZKI {{{
+"""" bufexplorer {{{
+" show relative paths to files
+let g:bufExplorerShowRelativePath = 1
+" show only buffers from this tab
+let g:bufExplorerShowTabBuffer = 1
+" }}}
 
 """" fzf {{{
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, {'options': ['--exact']}, <bang>0)
