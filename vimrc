@@ -8,6 +8,7 @@ set comments+=b:\"
 set encoding=utf-8
 set expandtab
 set foldcolumn=3
+set hidden
 set hlsearch
 " set ignorecase
 set incsearch
