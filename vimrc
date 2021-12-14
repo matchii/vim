@@ -51,17 +51,6 @@ nnoremap <A-]> gt
 nnoremap <A-'> <Esc>:q<CR>
 
 noremap <Leader>fsp :call SetProject()<CR>
-" surround word with brackets, quotes etc.
- noremap <Leader>( <ESC>ciw(<C-R>")<ESC>
-vnoremap <Leader>( "qc(<Esc>pa)<Esc>%
-vnoremap <Leader>[ "qc[<Esc>pa]<Esc>
-vnoremap <Leader>{ "qc{<Esc>pa}<Esc>
- noremap <Leader>' <ESC>ciw'<C-R>"'<ESC>
-vnoremap <Leader>' "qc'<Esc>pa'<Esc>
-vnoremap <Leader>" "qc"<Esc>pa"<Esc>
- noremap <Leader>` <ESC>ciw`<C-R>"`<ESC>
-vnoremap <Leader>` "qc`<Esc>pa`<Esc>
-vnoremap <Leader><Space> "qc<Space><Esc>pa<Space><Esc>
 
 inoremap {<Space> {  }<Left><Left>
 inoremap {<CR>     {<CR>}<Esc>O
@@ -92,8 +81,6 @@ inoremap <C-space> <C-X><C-O>
 
 " toggle fold
 nnoremap <space> za
-
-inoremap {3 {{{<CR><CR>}}}<Up>
 " }}}
 
 " Don't screw up folds when inserting text that might affect them, until
@@ -141,6 +128,7 @@ source ~/.vim/config/plugins/vim-project.vim
 source ~/.vim/config/plugins/vim-unimpaired.vim
 source ~/.vim/config/plugins/vdebug.vim
 source ~/.vim/config/plugins/vim-rest-console.vim
+source ~/.vim/config/plugins/vim-surround.vim
 source ~/.vim/config/plugins/vim-test.vim
 source ~/.vim/config/plugins/vimwiki.vim
 
