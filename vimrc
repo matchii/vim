@@ -1,64 +1,38 @@
-"""" USTAWIENIA {{{
+"""" SETTINGS {{{
 
-set comments+=b:\"
-
-filetype on
-
-" kodowanie znaków
-set encoding=utf-8
-
-" numeracja linii
-set number
-
-" ilość kolumn zwijania
-set fdc=3
-
-set incsearch
-
-" podświetlanie wyszukiwania
-set hlsearch
-
-" przeszukiwanie case insensitive
-" set ignorecase
-
-" odstęp kursora od krawędzi poziomych
-" set scrolloff=3
-
-" kolorowanie składni
+filetype plugin indent on
 syntax on
 
-" dolny pasek
-set ruler
-set showcmd
-
-" długość tabulatora
-set ts=4
-set shiftwidth=4
+set colorcolumn=120
+set comments+=b:\"
+set encoding=utf-8
+set expandtab
+set foldcolumn=3
+set hlsearch
+" set ignorecase
+set incsearch
+set laststatus=2
 set list
 set listchars=tab:\|\ ,trail:·
-set expandtab
-set softtabstop=4
-
-" tekst się nie zawija
 set nowrap
+set number
+set ruler
+set scrolloff=5
+set shiftwidth=4
+set showcmd
+set softtabstop=4
+set ts=4
 set sidescroll=10
-set laststatus=2
-
-" podświetlanie wybranej kolumny
-set colorcolumn=120
-filetype plugin indent on
-
 set wildmenu
 set wildmode=list:longest,full
 " }}}
 
+let completeopt="menuone,longest,preview"
 let mapleader = '\'
 
-let completeopt="menuone,longest,preview"
+"""" MAPPINGS {{{
 
-"""" MAPOWANIA {{{
-
-" wybór zakładki
+" tab select
 nnoremap <A-1> 1gt
 nnoremap <A-2> 2gt
 nnoremap <A-3> 3gt
@@ -68,13 +42,15 @@ nnoremap <A-6> 6gt
 nnoremap <A-7> 7gt
 nnoremap <A-8> 8gt
 nnoremap <A-9> 9gt
-" poprzednia / następna zakładka
+" previous tab
 nnoremap <A-[> gT
+" next tab
 nnoremap <A-]> gt
+" close tab
 nnoremap <A-'> <Esc>:q<CR>
 
 noremap <Leader>fsp :call SetProject()<CR>
-" objęcie słowa apostrofami/cudzysłowami/nawiasami
+" surround word with brackets, quotes etc.
  noremap <Leader>( <ESC>ciw(<C-R>")<ESC>
 vnoremap <Leader>( "qc(<Esc>pa)<Esc>%
 vnoremap <Leader>[ "qc[<Esc>pa]<Esc>
@@ -96,36 +72,24 @@ inoremap <expr> "  strpart(getline('.'), col('.')-1, 1) == '"' ? "\<Right>" : '"
 inoremap <expr> '  strpart(getline('.'), col('.')-1, 1) == "'" ? "\<Right>" : "''<Left>"
 inoremap <expr> `  strpart(getline('.'), col('.')-1, 1) == "`" ? "\<Right>" : "``<Left>"
 
-" otwiera listę buforów
 noremap <F1> <ESC>:BufExplorer<CR>
-
-" nowa karta z listą plików
+" new tab
 noremap <C-n> <ESC>:silent Te<CR>
-
-" wyłącza podświetlanie wyszukiwania
+" turn off highlight search
 noremap <C-h> :nohlsearch<CR>
-
-" nowy pusty bufor
+" new empty buffer
 noremap <C-F6> :enew<CR>
-
-" zamyka dolny bufor
+" close lower buffer
 noremap <F7> <Esc><C-w>j:q<CR>
-
-" zamyka górny bufor
+" close upper buffer
 noremap <F8> <Esc><C-w>k:q<CR>
-
 noremap <C-F9> <Esc>:TagbarToggle<CR>
-
 noremap <C-F11> <Esc>:Files<CR>
 
-" wywołanie omnikompletacji
+" omnicomplete
 inoremap <C-space> <C-X><C-O>
 
-" wcięcie zaznaczonego tekstu
-" vnoremap <Tab> >
-vnoremap <S-Tab> <
-
-" spacja rozwija/zwija folding
+" toggle fold
 nnoremap <space> za
 
 inoremap {3 {{{<CR><CR>}}}<Up>
@@ -150,6 +114,7 @@ augroup filetype_xt
 augroup END
 
 """" VimPlug {{{
+" Installs VimPlug if not exists
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
