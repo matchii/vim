@@ -62,7 +62,7 @@ inoremap <expr> `  strpart(getline('.'), col('.')-1, 1) == "`" ? "\<Right>" : "`
 
 noremap <F1> <ESC>:BufExplorer<CR>
 " new tab
-noremap <C-n> <ESC>:silent Te<CR>
+nnoremap <C-n> <ESC>:silent Texplore<CR>
 " turn off highlight search
 noremap <C-h> :nohlsearch<CR>
 " new empty buffer
