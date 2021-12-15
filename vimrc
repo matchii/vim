@@ -50,8 +50,6 @@ nnoremap <A-]> gt
 " close tab
 nnoremap <A-'> <Esc>:q<CR>
 
-noremap <Leader>fsp :call SetProject()<CR>
-
 inoremap {<Space> {  }<Left><Left>
 inoremap {<CR>     {<CR>}<Esc>O
 inoremap        (  ()<Left>

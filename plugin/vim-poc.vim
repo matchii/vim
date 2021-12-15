@@ -17,12 +17,6 @@ nnoremenu 100.600 PHP.Toggle NERDTree<Tab><C-F2>      :NERDTreeToggle<CR>
 " List of shortcuts {{{
 " Toggle NERDTree window
 nnoremap <C-F2> :NERDTreeToggle<CR>
-" Creates condition block
-noremap  <Leader>ii :call SetIfBlock(line('.'), line('.'))<CR>k0f(a
-vnoremap  <Leader>ii :<C-U>call SetIfBlock(line("."), line("'>"))<CR>k0f(a
-" Creates foreach block
-noremap  <Leader>fe :call SetForeachBlock(line('.'), line('.'))<CR>k0f(a
-vnoremap  <Leader>fe :<C-U>call SetForeachBlock(line("."), line("'>"))<CR>k0f(a
 " Breaks array defined in one line
 nnoremap <Leader>ba :call BreakArray(line('.'))<CR>
 " Breaks function parameters defined in one line
@@ -37,76 +31,6 @@ vnoremap <Leader>ea :call EnrowArrows(line("'<"), line("'>"))<CR>
 """"" FUNCTIONS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" SetIfBlock obejmuje fragment pomiędzy liniami blokiem if i zwiększa wcięcie o 1 poziom {{{
-function! SetIfBlock(first_line, last_line)
-    if a:first_line > a:last_line
-        return
-    endif
-    let prev_line = a:first_line - 1
-    let indent = matchstr(getline(a:first_line), '^\zs\s*\ze')
-
-    call append(a:last_line, indent."}")
-    let cur_line = a:last_line
-    while cur_line >= a:first_line
-        call setline(cur_line, substitute(getline(cur_line), "^", "    ", ''))
-        let cur_line -= 1
-    endwhile
-    call append(prev_line, indent."if () {")
-endfunction
-" }}}
-
-" SetForeachBlock obejmuje fragment pomiędzy liniami blokiem if i zwiększa wcięcie o 1 poziom {{{
-function! SetForeachBlock(first_line, last_line)
-    if a:first_line > a:last_line
-        return
-    endif
-    let prev_line = a:first_line - 1
-    let indent = matchstr(getline(a:first_line), '^\zs\s*\ze')
-
-    call append(a:last_line, indent."}")
-    let cur_line = a:last_line
-    while cur_line >= a:first_line
-        call setline(cur_line, substitute(getline(cur_line), "^", "    ", ''))
-        let cur_line -= 1
-    endwhile
-    call append(prev_line, indent."foreach () {")
-endfunction
-" }}}
-
-" SetTryCatchBlock obejmuje fragment pomiędzy liniami blokiem try..catch i zwiększa wcięcie o 1 poziom {{{
-function! SetTryCatchBlock(first_line, last_line)
-    if a:first_line > a:last_line
-        return
-    endif
-    let prev_line = a:first_line - 1
-    let indent = matchstr(getline(a:first_line), '^\zs\s*\ze')
-
-    call append(a:last_line, indent."}")
-    call append(a:last_line, indent."} catch () {")
-    let cur_line = a:last_line
-    while cur_line >= a:first_line
-        call setline(cur_line, substitute(getline(cur_line), "^", "    ", ''))
-        let cur_line -= 1
-    endwhile
-    call append(prev_line, indent."try {")
-endfunction
-" }}}
-
-" SetProject {{{
-function! SetProject()
-    normal! c
-    if filereadable('.project.vim')
-        execute 'source .project.vim'
-    endif
-endfunction
-" }}}
-
-" VarDump {{{
-function! VarDump(var, value, line)
-    execute "!echo linia ".a:line.":    ".a:var." = ".a:value." >> /home/maciej/vim_var_dump.txt"
-endfunction
-" }}}
-
 " UnderscoreToDash {{{
 function! UnderscoreToDash(content)
     return substitute(a:content, "_", "-", "g")
@@ -116,15 +40,6 @@ endfunction
 " GetPHPDocumentation {{{
 function! GetPHPDocumentation(name)
     execute "!firefox www.php.net/manual/en/function." . UnderscoreToDash(a:name) . ".php"
-endfunction
-" }}}
-
-" FormatForIn formatuje listę np. numerów tak żeby pasowały do INa w zapytaniu {{{
-function! FormatForIn()
-    execute "g/^$/d"
-    execute "%s/$/,/"
-    execute "$s/,$//"
-    normal! ggVGgq<CR><F5>
 endfunction
 " }}}
 
