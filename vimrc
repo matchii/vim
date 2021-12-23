@@ -33,6 +33,8 @@ let mapleader = '\'
 
 """" MAPPINGS {{{
 
+nnoremap <silent> <leader> :WhichKey '\'<CR>
+
 " tab select
 nnoremap <A-1> 1gt
 nnoremap <A-2> 2gt
@@ -72,7 +74,6 @@ noremap <F7> <Esc><C-w>j:q<CR>
 " close upper buffer
 noremap <F8> <Esc><C-w>k:q<CR>
 noremap <C-F9> <Esc>:TagbarToggle<CR>
-noremap <C-F11> <Esc>:Files<CR>
 
 " omnicomplete
 inoremap <C-space> <C-X><C-O>
@@ -128,6 +129,7 @@ source ~/.vim/config/plugins/vdebug.vim
 source ~/.vim/config/plugins/vim-rest-console.vim
 source ~/.vim/config/plugins/vim-surround.vim
 source ~/.vim/config/plugins/vim-test.vim
+source ~/.vim/config/plugins/vim-which-key.vim
 source ~/.vim/config/plugins/vimwiki.vim
 
 call plug#end()
