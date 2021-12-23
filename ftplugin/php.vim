@@ -4,5 +4,3 @@ let php_folding=1
 set makeprg=php\ -l\ %
 set errorformat=%m\ in\ %f\ on\ line\ %l
 set relativenumber
-
-noremap K :call GetPHPDocumentation(expand("<cword>"))<CR><CR>

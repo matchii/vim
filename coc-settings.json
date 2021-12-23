@@ -1,0 +1,5 @@
+{
+    "suggest.autoTrigger": "trigger",
+    "diagnostic.checkCurrentLine": true,
+    "diagnostic.displayByAle": true
+}

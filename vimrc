@@ -75,9 +75,6 @@ noremap <F7> <Esc><C-w>j:q<CR>
 noremap <F8> <Esc><C-w>k:q<CR>
 noremap <C-F9> <Esc>:TagbarToggle<CR>
 
-" omnicomplete
-inoremap <C-space> <C-X><C-O>
-
 " toggle fold
 nnoremap <space> za
 " }}}
@@ -111,6 +108,7 @@ call plug#begin('~/.vim/bundle')
 
 source ~/.vim/config/plugins/ale.vim
 source ~/.vim/config/plugins/bufexplorer.vim
+source ~/.vim/config/plugins/coc.vim
 source ~/.vim/config/plugins/emmet-vim.vim
 source ~/.vim/config/plugins/fzf.vim
 source ~/.vim/config/plugins/lightline.vim
