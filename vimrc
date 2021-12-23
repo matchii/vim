@@ -17,6 +17,7 @@ set list
 set listchars=tab:\|\ ,trail:·
 set nowrap
 set number
+set relativenumber
 set ruler
 set scrolloff=5
 set shiftwidth=4
@@ -117,6 +118,7 @@ source ~/.vim/config/plugins/nerdtree.vim
 source ~/.vim/config/plugins/nerdtree-git-plugin.vim
 source ~/.vim/config/plugins/phpactor.vim
 source ~/.vim/config/plugins/signify.vim
+source ~/.vim/config/plugins/splitjoin.vim
 source ~/.vim/config/plugins/tagbar.vim
 source ~/.vim/config/plugins/ultisnips.vim
 source ~/.vim/config/plugins/vim-commentary.vim
