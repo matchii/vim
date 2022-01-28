@@ -30,11 +30,12 @@ set wildmode=list:longest,full
 " }}}
 
 let completeopt="menuone,longest,preview"
-let mapleader = '\'
+let mapleader = ' '
+nnoremap <space> <nop>
 
 """" MAPPINGS {{{
 
-nnoremap <silent> <leader> :WhichKey '\'<CR>
+nnoremap <silent> <leader> :WhichKey '<space>'<CR>
 
 " tab select
 nnoremap <A-1> 1gt
@@ -77,7 +78,7 @@ noremap <F8> <Esc><C-w>k:q<CR>
 noremap <C-F9> <Esc>:TagbarToggle<CR>
 
 " toggle fold
-nnoremap <space> za
+" nnoremap <space> za
 " }}}
 
 " Don't screw up folds when inserting text that might affect them, until

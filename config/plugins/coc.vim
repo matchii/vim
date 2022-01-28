@@ -1,6 +1,7 @@
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <leader>cr :CocRestart<cr>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
