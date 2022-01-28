@@ -9,16 +9,29 @@ def visibility(t, opts):
 	return "(" + "|".join(opts) + ")"
 endglobal
 
-snippet fn "Anonymous function"
+snippet db "DocBlock" b
+/**
+ * ${1}
+ */
+endsnippet
+
+snippet fn "Anonymous function" w
 function ($1) {
 	$2
 }
 endsnippet
 
 snippet pf "PHP function" b
-$1`!p snip.rv=visibility(t[1], ['public','protected','private'])` function ${2}($3): ${4:void}
+public function ${1}(${2}): ${4:void}
 {
 	${5:throw new \Exception("Not implemented yet");}
+}
+endsnippet
+
+snippet cf "Constructor function" b
+public function __construct(${1})
+{
+	${2}
 }
 endsnippet
 
@@ -28,9 +41,9 @@ snippet tf "Test function" b
  */
 public function ${1}(): void
 {
-	${2:$this->fail('Test '.__METHOD__.' not implemented');}
+	$this->fail('Test ' . __METHOD__ . ' not implemented');
 	// Given
-
+	${2}
 	// Assert
 
 	// When
@@ -132,5 +145,10 @@ try {
 endsnippet
 
 snippet ex "exception throw" b
-throw new \\${1}Exception($2);
+throw new ${1}Exception($2);
+endsnippet
+
+snippet sm "sql migration" b
+$sql = <<<SQL$1SQL;
+$this->addSql($sql);
 endsnippet
