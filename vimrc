@@ -21,6 +21,7 @@ set relativenumber
 set ruler
 set scrolloff=5
 set shiftwidth=4
+set signcolumn=yes
 set showcmd
 set softtabstop=4
 set ts=4
