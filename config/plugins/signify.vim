@@ -6,5 +6,5 @@ highlight SignifySignAdd                  ctermbg=green                guibg=#68
 highlight SignifySignDelete ctermfg=black ctermbg=red    guifg=#ffffff guibg=#cc6893
 highlight SignifySignChange ctermfg=black ctermbg=yellow guifg=#000000 guibg=#ccca68
 
-nnoremap <leader>shu :SignifyHunkUndo<CR>
-nnoremap <leader>sd  :SignifyDiff<CR>
+nnoremap <leader>su :SignifyHunkUndo<CR>
+nnoremap <leader>sd :SignifyDiff<CR>
